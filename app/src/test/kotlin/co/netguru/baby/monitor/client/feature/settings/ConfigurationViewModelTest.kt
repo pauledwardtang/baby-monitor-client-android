@@ -8,7 +8,14 @@ import co.netguru.baby.monitor.client.common.Randomiser
 import co.netguru.baby.monitor.client.feature.communication.ConfirmationUseCase
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageController
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisOption
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Before
@@ -38,7 +45,7 @@ class ConfigurationViewModelTest {
         resetAppUseCase,
         firebaseRepository,
         confirmationUseCase,
-        randomiser
+        randomiser,
     )
 
     @Before
@@ -94,22 +101,26 @@ class ConfigurationViewModelTest {
     fun `should post completed state after successful voice analysis option change`() {
         val chosenOption = VoiceAnalysisOption.MACHINE_LEARNING
         whenever(
-            confirmationUseCase.changeValue(eq(messageController), any())
+            confirmationUseCase.changeValue(eq(messageController), any()),
         )
             .doReturn(Single.just(true))
         configurationViewModel.voiceAnalysisOptionState.observeForever(voiceAnalysisOptionObserver)
 
         configurationViewModel.chooseVoiceAnalysisOption(
             messageController,
-            chosenOption
+            chosenOption,
         )
         voiceAnalysisOptionObserver.inOrder {
-            verify().onChanged(argThat {
-                first == ChangeState.InProgress && second == null
-            })
-            verify().onChanged(argThat {
-                first == ChangeState.Completed && second == chosenOption
-            })
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.InProgress && second == null
+                },
+            )
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.Completed && second == chosenOption
+                },
+            )
         }
     }
 
@@ -118,23 +129,27 @@ class ConfigurationViewModelTest {
         val previousOption = VoiceAnalysisOption.NOISE_DETECTION
         val chosenOption = VoiceAnalysisOption.MACHINE_LEARNING
         whenever(
-            confirmationUseCase.changeValue(eq(messageController), any())
+            confirmationUseCase.changeValue(eq(messageController), any()),
         )
             .doReturn(Single.just(false))
         configurationViewModel.voiceAnalysisOptionState.observeForever(voiceAnalysisOptionObserver)
 
         configurationViewModel.chooseVoiceAnalysisOption(
             messageController,
-            chosenOption
+            chosenOption,
         )
 
         voiceAnalysisOptionObserver.inOrder {
-            verify().onChanged(argThat {
-                first == ChangeState.InProgress && second == null
-            })
-            verify().onChanged(argThat {
-                first == ChangeState.Failed && second == previousOption
-            })
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.InProgress && second == null
+                },
+            )
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.Failed && second == previousOption
+                },
+            )
         }
     }
 
@@ -142,23 +157,27 @@ class ConfigurationViewModelTest {
     fun `should post completed state after successful noise noiseLevel change`() {
         val chosennoiseLevel = 50
         whenever(
-            confirmationUseCase.changeValue(eq(messageController), any())
+            confirmationUseCase.changeValue(eq(messageController), any()),
         )
             .doReturn(Single.just(true))
         configurationViewModel.noiseLevelState.observeForever(noiseLevelObserver)
 
         configurationViewModel.changeNoiseLevel(
             messageController,
-            chosennoiseLevel
+            chosennoiseLevel,
         )
 
         noiseLevelObserver.inOrder {
-            verify().onChanged(argThat {
-                first == ChangeState.InProgress && second == null
-            })
-            verify().onChanged(argThat {
-                first == ChangeState.Completed && second == chosennoiseLevel
-            })
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.InProgress && second == null
+                },
+            )
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.Completed && second == chosennoiseLevel
+                },
+            )
         }
     }
 
@@ -166,23 +185,27 @@ class ConfigurationViewModelTest {
     fun `should post failed state with previous noise noiseLevel`() {
         val chosennoiseLevel = 50
         whenever(
-            confirmationUseCase.changeValue(eq(messageController), any())
+            confirmationUseCase.changeValue(eq(messageController), any()),
         )
             .doReturn(Single.just(false))
         configurationViewModel.noiseLevelState.observeForever(noiseLevelObserver)
 
         configurationViewModel.changeNoiseLevel(
             messageController,
-            chosennoiseLevel
+            chosennoiseLevel,
         )
 
         noiseLevelObserver.inOrder {
-            verify().onChanged(argThat {
-                first == ChangeState.InProgress && second == null
-            })
-            verify().onChanged(argThat {
-                first == ChangeState.Failed && second == configurationViewModel.noiseLevelInitialValue
-            })
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.InProgress && second == null
+                },
+            )
+            verify().onChanged(
+                argThat {
+                    first == ChangeState.Failed && second == configurationViewModel.noiseLevelInitialValue
+                },
+            )
         }
     }
 }

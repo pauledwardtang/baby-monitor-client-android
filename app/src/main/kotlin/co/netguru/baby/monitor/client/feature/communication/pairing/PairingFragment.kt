@@ -43,21 +43,26 @@ class PairingFragment : BaseFragment() {
     }
 
     private fun setupOnBackPressedHandling() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.cancelPairing()
-                findNavController().popBackStack()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object :
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.cancelPairing()
+                    findNavController().popBackStack()
+                }
+            },
+        )
         backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }
 
     private fun setupObservers() {
-        viewModel.pairingCompletedState.observe(viewLifecycleOwner,
-            Observer { onConnectionCompleted(it) })
+        viewModel.pairingCompletedState.observe(
+            viewLifecycleOwner,
+            Observer { onConnectionCompleted(it) },
+        )
     }
 
     private fun onConnectionCompleted(connectionCompleted: Boolean) {
@@ -66,7 +71,7 @@ class PairingFragment : BaseFragment() {
                 R.id.pairingToAllDone
             } else {
                 R.id.pairingToConnectionFailed
-            }
+            },
         )
     }
 }

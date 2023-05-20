@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class NotifyBabyEventUseCase(
     private val notificationSender: FirebaseNotificationSender,
-    private val notificationTexts: Map<String, String>
+    private val notificationTexts: Map<String, String>,
 ) {
     private val babyEvents: PublishSubject<BabyEvent> = PublishSubject.create()
 
@@ -22,7 +22,7 @@ class NotifyBabyEventUseCase(
         return notificationSender.broadcastNotificationToFcm(
             notificationTitle ?: error("Notification title missing"),
             notificationTexts[NOTIFICATION_TEXT_KEY] ?: error("Notification text missing"),
-            notificationType
+            notificationType,
         )
     }
 

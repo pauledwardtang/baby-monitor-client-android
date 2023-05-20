@@ -44,8 +44,8 @@ class ClientLiveCameraFragment : BaseFragment() {
         viewModel.setBackButtonState(
             BackButtonState(
                 true,
-                shouldShowSnoozeDialogOnBack()
-            )
+                shouldShowSnoozeDialogOnBack(),
+            ),
         )
         setupPushToSpeakButton()
         setupObservers()
@@ -54,7 +54,7 @@ class ClientLiveCameraFragment : BaseFragment() {
     private fun setupPushToSpeakButton() {
         if (PermissionUtils.arePermissionsGranted(
                 requireContext(),
-                android.Manifest.permission.RECORD_AUDIO
+                android.Manifest.permission.RECORD_AUDIO,
             )
         ) {
             enablePushToSpeakButton()
@@ -81,7 +81,7 @@ class ClientLiveCameraFragment : BaseFragment() {
             false,
             PRESSED_SCALE,
             NORMAL_SCALE,
-            ANIMATION_DURATION
+            ANIMATION_DURATION,
         )
     }
 
@@ -91,17 +91,21 @@ class ClientLiveCameraFragment : BaseFragment() {
             true,
             PRESSED_SCALE,
             NORMAL_SCALE,
-            ANIMATION_DURATION
+            ANIMATION_DURATION,
         )
     }
 
     private fun setupObservers() {
         viewModel.selectedChildAvailability.observe(
             viewLifecycleOwner,
-            Observer { it?.let(::onAvailabilityChange) })
-        fragmentViewModel.streamState.observe(viewLifecycleOwner, Observer {
-            handleStreamStateChange(it)
-        })
+            Observer { it?.let(::onAvailabilityChange) },
+        )
+        fragmentViewModel.streamState.observe(
+            viewLifecycleOwner,
+            Observer {
+                handleStreamStateChange(it)
+            },
+        )
     }
 
     override fun onStart() {
@@ -122,8 +126,8 @@ class ClientLiveCameraFragment : BaseFragment() {
         viewModel.setBackButtonState(
             BackButtonState(
                 shouldBeVisible = false,
-                shouldShowSnoozeDialog = false
-            )
+                shouldShowSnoozeDialog = false,
+            ),
         )
     }
 
@@ -137,13 +141,15 @@ class ClientLiveCameraFragment : BaseFragment() {
     }
 
     private fun maybeStartCall() {
-        if (!fragmentViewModel.callInProgress.get()) startCall(
-            viewModel.rxWebSocketClient,
-            PermissionUtils.arePermissionsGranted(
-                requireContext(),
-                android.Manifest.permission.RECORD_AUDIO
+        if (!fragmentViewModel.callInProgress.get()) {
+            startCall(
+                viewModel.rxWebSocketClient,
+                PermissionUtils.arePermissionsGranted(
+                    requireContext(),
+                    android.Manifest.permission.RECORD_AUDIO,
+                ),
             )
-        )
+        }
     }
 
     private fun startCall(rxWebSocketClient: RxWebSocketClient, hasRecordAudioPermission: Boolean) {
@@ -153,14 +159,16 @@ class ClientLiveCameraFragment : BaseFragment() {
             liveCameraRemoteRenderer,
             serverUri,
             rxWebSocketClient,
-            hasRecordAudioPermission
+            hasRecordAudioPermission,
         )
     }
 
     private fun handleStreamStateChange(streamState: StreamState) {
         when ((streamState as? ConnectionState)?.connectionState) {
             RtcConnectionState.Connected,
-            RtcConnectionState.Completed -> streamProgressBar.isVisible = false
+            RtcConnectionState.Completed,
+            -> streamProgressBar.isVisible = false
+
             RtcConnectionState.Checking -> streamProgressBar.isVisible = true
             RtcConnectionState.Error -> handleBabyDeviceSdpError()
             else -> Unit

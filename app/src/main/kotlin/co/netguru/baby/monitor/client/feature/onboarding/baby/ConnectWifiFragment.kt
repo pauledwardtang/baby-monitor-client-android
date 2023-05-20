@@ -27,22 +27,27 @@ class ConnectWifiFragment : BaseFragment() {
                     when {
                         requireContext().allPermissionsGranted(allPermissions)
                         -> R.id.connectWiFiToSetupInformation
+
                         requireContext().allPermissionsGranted(cameraPermission)
                         -> R.id.connectWiFiToPermissionMicrophone
+
                         else -> R.id.connectWiFiToPermissionCamera
-                    }
+                    },
                 )
             } else {
                 startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
             }
         }
-        wifiReceiver.isWifiConnected.observe(this, Observer { isConnected ->
-            wifiConnectionButton.text = if (isConnected?.fetchData() == true) {
-                getString(R.string.connect_wifi_connected)
-            } else {
-                getString(R.string.connect_to_wi_fi)
-            }
-        })
+        wifiReceiver.isWifiConnected.observe(
+            this,
+            Observer { isConnected ->
+                wifiConnectionButton.text = if (isConnected?.fetchData() == true) {
+                    getString(R.string.connect_wifi_connected)
+                } else {
+                    getString(R.string.connect_to_wi_fi)
+                }
+            },
+        )
     }
 
     override fun onResume() {
@@ -57,10 +62,11 @@ class ConnectWifiFragment : BaseFragment() {
 
     companion object {
         private val allPermissions = arrayOf(
-                Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
         )
         private val cameraPermission = arrayOf(
-                Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
         )
     }
 }

@@ -16,14 +16,18 @@ class PermissionCameraFragment : BaseFragment() {
         requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         findNavController().navigate(
-                if (requireContext().allPermissionsGranted(Companion.permissions)) {
-                    R.id.permissionCameraToPermissionMicrophone
-                } else {
-                    R.id.permissionCameraToPermissionDenied
-                }
+            if (requireContext().allPermissionsGranted(Companion.permissions)) {
+                R.id.permissionCameraToPermissionMicrophone
+            } else {
+                R.id.permissionCameraToPermissionDenied
+            },
         )
     }
 
@@ -31,7 +35,7 @@ class PermissionCameraFragment : BaseFragment() {
         private const val PERMISSIONS_REQUEST_CODE = 125
 
         private val permissions = arrayOf(
-                Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
         )
     }
 }

@@ -31,6 +31,7 @@ class WebRtcService : Service() {
                         .subscribeBy(onNext = ::handleMessage)
                         .addTo(disposables)
                 }
+
                 else ->
                     Timber.w("Unhandled service connected: $name, $service.")
             }
@@ -56,7 +57,7 @@ class WebRtcService : Service() {
         bindService(
             Intent(applicationContext, WebSocketServerService::class.java),
             serviceConnection,
-            BIND_AUTO_CREATE
+            BIND_AUTO_CREATE,
         )
     }
 
@@ -81,9 +82,11 @@ class WebRtcService : Service() {
         fun addSurfaceView(surfaceView: SurfaceViewRenderer) {
             webRtcManager.addSurfaceView(surfaceView)
         }
+
         fun enableCamera(enableCamera: Boolean) {
             webRtcManager.cameraEnabled = enableCamera
         }
+
         fun getConnectionObservable() = webRtcManager.getConnectionObservable()
     }
 }

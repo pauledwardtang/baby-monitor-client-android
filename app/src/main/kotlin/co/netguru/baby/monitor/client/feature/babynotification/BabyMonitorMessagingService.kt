@@ -25,6 +25,7 @@ import javax.inject.Inject
 class BabyMonitorMessagingService : FirebaseMessagingService() {
 
     private val notificationHandler by lazy { NotificationHandler(this) }
+
     @Inject
     internal lateinit var database: DataRepository
     private val disposables = CompositeDisposable()
@@ -44,14 +45,15 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
         val notificationType = message.data[NOTIFICATION_TYPE] ?: NotificationType.DEFAULT.name
         when (NotificationType.valueOf(notificationType)) {
             NotificationType.CRY_NOTIFICATION, NotificationType.NOISE_NOTIFICATION -> handleBabyEvent(
-                message.data
+                message.data,
             )
+
             NotificationType.LOW_BATTERY_NOTIFICATION -> handleLowBatteryNotification(message.data)
             else -> {
                 message.notification?.let {
                     handleRemoteNotification(
                         it.title.orEmpty(),
-                        it.body.orEmpty()
+                        it.body.orEmpty(),
                     )
                 }
             }
@@ -61,7 +63,7 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
     private fun handleLowBatteryNotification(data: MutableMap<String, String>) {
         handleRemoteNotification(
             data[NOTIFICATION_TITLE].orEmpty(),
-            data[NOTIFICATION_TEXT].orEmpty()
+            data[NOTIFICATION_TEXT].orEmpty(),
         )
     }
 
@@ -75,20 +77,20 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
                         val actions = listOf(
                             NotificationHandler.createNotificationAction(
                                 NotificationHandler.SHOW_CAMERA_ACTION,
-                                this
+                                this,
                             ),
                             NotificationHandler.createNotificationAction(
                                 NotificationHandler.SNOOZE_ACTION,
-                                this
-                            )
+                                this,
+                            ),
                         )
                         handleRemoteNotification(
                             data[NOTIFICATION_TITLE].orEmpty(),
                             data[NOTIFICATION_TEXT].orEmpty(),
-                            actions
+                            actions,
                         )
                     }
-                }
+                },
             )
     }
 
@@ -98,7 +100,7 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
     private fun handleRemoteNotification(
         title: String,
         text: String,
-        actions: List<NotificationCompat.Action>? = null
+        actions: List<NotificationCompat.Action>? = null,
     ) {
         val drawableResId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             R.drawable.ic_baby
@@ -113,8 +115,8 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
                 title = title,
                 content = text,
                 iconResId = drawableResId,
-                actions = actions
-            )
+                actions = actions,
+            ),
         )
 
         logToDatabase(title)
@@ -126,9 +128,10 @@ class BabyMonitorMessagingService : FirebaseMessagingService() {
             .subscribeBy(
                 onComplete = {
                     Timber.i("Log inserted into the database.")
-                }, onError = { error ->
+                },
+                onError = { error ->
                     Timber.w(error, "Couldn't insert log into the database.")
-                }
+                },
             )
     }
 

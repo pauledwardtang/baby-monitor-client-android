@@ -2,7 +2,12 @@ package co.netguru.baby.monitor.client.common.extensions
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.RectF
 import android.view.View
 import android.view.animation.BounceInterpolator
 import android.widget.ImageView
@@ -35,7 +40,7 @@ fun Bitmap.addBorderAndCover(
     borderColor: Int,
     borderSize: Float,
     coverColor: Int,
-    vectorDrawable: VectorDrawableCompat?
+    vectorDrawable: VectorDrawableCompat?,
 ): Bitmap {
     val smallerEdge = Math.min(height, width)
     var borderSizeFinal = borderSize
@@ -67,8 +72,10 @@ fun Bitmap.addBorderAndCover(
     paint.style = Paint.Style.FILL
     paint.color = coverColor
     val rectf = RectF(
-        borderSizeFinal / 2, borderSizeFinal / 2,
-        width + borderSizeFinal * 1.5f, height + borderSizeFinal * 1.5f
+        borderSizeFinal / 2,
+        borderSizeFinal / 2,
+        width + borderSizeFinal * 1.5f,
+        height + borderSizeFinal * 1.5f,
     )
     canvas.drawArc(rectf, 0f, 180f, true, paint)
     vectorDrawable ?: return output
@@ -90,34 +97,37 @@ fun <T> ImageView.babyProfileImage(uri: T, borderSize: Float, colorRes: Int, vec
         .asBitmap()
         .load(uri)
         .apply(RequestOptions.circleCropTransform())
-        .into(object : BitmapImageViewTarget(this) {
-            override fun setResource(resource: Bitmap?) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(
-                    context.resources,
-                    resource?.addBorderAndCover(
-                        ContextCompat.getColor(context, R.color.accent), borderSize,
-                        ContextCompat.getColor(context, colorRes),
-                        VectorDrawableCompat.create(
-                            context.resources,
-                            vectorDrawable,
-                            null
-                        )
+        .into(
+            object : BitmapImageViewTarget(this) {
+                override fun setResource(resource: Bitmap?) {
+                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(
+                        context.resources,
+                        resource?.addBorderAndCover(
+                            ContextCompat.getColor(context, R.color.accent),
+                            borderSize,
+                            ContextCompat.getColor(context, colorRes),
+                            VectorDrawableCompat.create(
+                                context.resources,
+                                vectorDrawable,
+                                null,
+                            ),
+                        ),
                     )
-                )
-                circularBitmapDrawable.isCircular = true
-                setImageDrawable(circularBitmapDrawable)
-            }
-        })
+                    circularBitmapDrawable.isCircular = true
+                    setImageDrawable(circularBitmapDrawable)
+                }
+            },
+        )
 }
 
 fun RecyclerView.setDivider(@DrawableRes drawableRes: Int) {
     val divider = DividerItemDecoration(
         this.context,
-        DividerItemDecoration.VERTICAL
+        DividerItemDecoration.VERTICAL,
     )
     val drawable = ContextCompat.getDrawable(
         this.context,
-        drawableRes
+        drawableRes,
     )
     drawable?.let {
         divider.setDrawable(it)
@@ -129,15 +139,17 @@ fun View.scaleAnimation(
     isScaleUp: Boolean,
     scaleUpSize: Float,
     scaleDownSize: Float,
-    duration: Long
+    duration: Long,
 ) {
     val scaleX = ObjectAnimator.ofFloat(
         this,
-        SCALE_X_PROPERTY, if (isScaleUp) scaleUpSize else scaleDownSize
+        SCALE_X_PROPERTY,
+        if (isScaleUp) scaleUpSize else scaleDownSize,
     )
     val scaleY = ObjectAnimator.ofFloat(
         this,
-        SCALE_Y_PROPERTY, if (isScaleUp) scaleUpSize else scaleDownSize
+        SCALE_Y_PROPERTY,
+        if (isScaleUp) scaleUpSize else scaleDownSize,
     )
     scaleX.duration = duration
     scaleY.duration = duration

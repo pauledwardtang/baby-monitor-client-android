@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class ClientLiveCameraFragmentViewModel @Inject constructor(
     private val analyticsManager: AnalyticsManager,
-    private val rtcClientController: RtcClientController
+    private val rtcClientController: RtcClientController,
 ) : ViewModel() {
 
     val callInProgress = AtomicBoolean(false)
@@ -37,7 +37,7 @@ class ClientLiveCameraFragmentViewModel @Inject constructor(
         liveCameraRemoteRenderer: CustomSurfaceViewRenderer,
         serverUri: URI,
         client: RxWebSocketClient,
-        hasRecordAudioPermission: Boolean
+        hasRecordAudioPermission: Boolean,
     ) {
         rtcClientController.startCall(
             context,
@@ -45,7 +45,7 @@ class ClientLiveCameraFragmentViewModel @Inject constructor(
             serverUri,
             client,
             this::handleStreamStateChange,
-            hasRecordAudioPermission
+            hasRecordAudioPermission,
         )
         callInProgress.set(true)
     }

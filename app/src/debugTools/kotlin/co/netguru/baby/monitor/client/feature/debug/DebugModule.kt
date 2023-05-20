@@ -33,11 +33,15 @@ class DebugModule @Inject constructor() {
         return Observables.combineLatest(
             notificationEvents.startWith(NOTIFICATION_INFORMATION_INITIAL_STATE),
             cryingProbabilityEvents.startWith(CRYING_PROBABILITY_INITIAL_STATE),
-            soundEvents.startWith(SOUND_INITIAL_STATE)
+            soundEvents.startWith(SOUND_INITIAL_STATE),
         )
-            .map { (notificationInformation: String,
-                       cryingProbability: Float,
-                       decibels: Int) ->
+            .map {
+                    (
+                        notificationInformation: String,
+                        cryingProbability: Float,
+                        decibels: Int,
+                    ),
+                ->
                 DebugState(notificationInformation, cryingProbability, decibels)
             }
             .doOnError { Timber.w(it) }

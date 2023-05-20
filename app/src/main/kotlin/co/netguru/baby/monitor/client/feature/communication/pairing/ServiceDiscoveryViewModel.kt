@@ -8,14 +8,14 @@ import co.netguru.baby.monitor.client.feature.communication.nsd.NsdState
 import javax.inject.Inject
 
 class ServiceDiscoveryViewModel @Inject constructor(
-    private val nsdServiceManager: NsdServiceManager
+    private val nsdServiceManager: NsdServiceManager,
 ) : ViewModel() {
 
     private var multicastLock: WifiManager.MulticastLock? = null
     val nsdStateLiveData: LiveData<NsdState> = nsdServiceManager.nsdStateLiveData
 
     internal fun discoverNsdService(
-        wifiManager: WifiManager
+        wifiManager: WifiManager,
     ) {
         acquireMulticastLock(wifiManager)
         nsdServiceManager.discoverService()

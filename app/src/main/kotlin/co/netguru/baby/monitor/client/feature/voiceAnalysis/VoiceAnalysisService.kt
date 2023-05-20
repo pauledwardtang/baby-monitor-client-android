@@ -26,7 +26,7 @@ class VoiceAnalysisService : ServiceFacade,
             rawData,
             AacRecorder.BITS_PER_SAMPLE,
             AacRecorder.CHANNELS,
-            AacRecorder.SAMPLING_RATE
+            AacRecorder.SAMPLING_RATE,
         )
     }
 

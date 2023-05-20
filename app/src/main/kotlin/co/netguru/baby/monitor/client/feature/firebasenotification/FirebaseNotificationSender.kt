@@ -15,7 +15,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class FirebaseNotificationSender @Inject constructor(
@@ -23,12 +23,12 @@ class FirebaseNotificationSender @Inject constructor(
     private val httpClient: OkHttpClient,
     private val debugModule: DebugModule,
     private val analyticsManager: AnalyticsManager,
-    private val gson: Gson
+    private val gson: Gson,
 ) {
     fun broadcastNotificationToFcm(
         title: String,
         text: String,
-        notificationType: NotificationType
+        notificationType: NotificationType,
     ): Completable =
         dataRepository.getClientData()
             .doOnSuccess { Timber.i("Client data: $it.") }
@@ -39,7 +39,7 @@ class FirebaseNotificationSender @Inject constructor(
                     .doOnSuccess { response ->
                         debugModule.sendNotificationEvent(
                             "Notification posted: Title: $title" +
-                                    " text: $text. Response: ${response.body?.string()}."
+                                " text: $text. Response: ${response.body?.string()}.",
                         )
                         Timber.d("Notification posted: $response.")
                     }
@@ -50,7 +50,7 @@ class FirebaseNotificationSender @Inject constructor(
         firebaseToken: String,
         title: String,
         text: String,
-        notificationType: NotificationType
+        notificationType: NotificationType,
     ): Single<Response> {
         return checkIdCall(firebaseToken)
             .flatMap { isAndroid ->
@@ -59,7 +59,7 @@ class FirebaseNotificationSender @Inject constructor(
                     title,
                     text,
                     notificationType,
-                    isAndroid
+                    isAndroid,
                 )
             }
     }
@@ -71,13 +71,13 @@ class FirebaseNotificationSender @Inject constructor(
                     .url("$ID_CHECK_URL$firebaseToken")
                     .header(
                         AUTHORIZATION_HEADER,
-                        "key=${BuildConfig.FIREBASE_CLOUD_MESSAGING_SERVER_KEY}"
+                        "key=${BuildConfig.FIREBASE_CLOUD_MESSAGING_SERVER_KEY}",
                     )
-                    .build()
+                    .build(),
             ).execute()
             val platform = response.body?.let { JSONObject(it.string()) }
                 ?.getString(PLATFORM_KEY)
-            return@fromCallable platform?.toLowerCase(Locale.getDefault()) == ANDROID_PLATFORM
+            return@fromCallable platform?.lowercase(Locale.getDefault()) == ANDROID_PLATFORM
         }
             .onErrorReturnItem(false)
     }
@@ -87,7 +87,7 @@ class FirebaseNotificationSender @Inject constructor(
         title: String,
         text: String,
         notificationType: NotificationType,
-        isAndroid: Boolean
+        isAndroid: Boolean,
     ): Single<Response> {
         return Single.fromCallable {
             httpClient.newCall(
@@ -95,7 +95,7 @@ class FirebaseNotificationSender @Inject constructor(
                     .url(FCM_URL)
                     .header(
                         AUTHORIZATION_HEADER,
-                        "key=${BuildConfig.FIREBASE_CLOUD_MESSAGING_SERVER_KEY}"
+                        "key=${BuildConfig.FIREBASE_CLOUD_MESSAGING_SERVER_KEY}",
                     )
                     .post(
                         gson.toJson(
@@ -103,12 +103,12 @@ class FirebaseNotificationSender @Inject constructor(
                                 Message(firebaseToken, data = Data(title, text, notificationType.name))
                             } else {
                                 Message(firebaseToken, notification = Notification(title, text))
-                            }
+                            },
                         )
                             .toString()
-                            .toRequestBody("application/json".toMediaType())
+                            .toRequestBody("application/json".toMediaType()),
                     )
-                    .build()
+                    .build(),
             ).execute()
         }
     }

@@ -8,6 +8,7 @@ ext {
     lifecycleVersion = '2.5.0'
     roomVersion = '2.2.1'
     navigationVersion = '2.1.0'
+    archCoreVersion = '2.2.0'
 
     libs = [
             kotlin              : "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -65,7 +66,7 @@ ext {
     ]
 
     test = [
-            lifecycleExtensions: "androidx.arch.core:core-testing:$lifecycleVersion",
+            lifecycleExtensions: "androidx.arch.core:core-testing:$archCoreVersion",
             mockito            : "org.mockito:mockito-core:3.10.0",
             mockitoKotlin      : "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
             junit              : "junit:junit:4.12",

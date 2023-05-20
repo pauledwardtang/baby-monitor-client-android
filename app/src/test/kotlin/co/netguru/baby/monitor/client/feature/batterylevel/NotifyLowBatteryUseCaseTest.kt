@@ -25,7 +25,7 @@ class NotifyLowBatteryUseCaseTest {
         verify(notificationSender).broadcastNotificationToFcm(
             title,
             text,
-            NotificationType.LOW_BATTERY_NOTIFICATION
+            NotificationType.LOW_BATTERY_NOTIFICATION,
         )
     }
 }

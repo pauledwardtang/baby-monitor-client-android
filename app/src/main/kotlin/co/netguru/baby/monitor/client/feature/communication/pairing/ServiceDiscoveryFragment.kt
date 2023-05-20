@@ -60,16 +60,20 @@ class ServiceDiscoveryFragment : BaseFragment() {
 
     private fun navigateToPairingFragment(nsdServiceInfo: NsdServiceInfo) {
         findNavController().navigate(
-            R.id.serviceDiscoveryToPairing, bundleOf(
-                ADDRESS_BUNDLE_KEY to "ws://${nsdServiceInfo.host.hostAddress}:${nsdServiceInfo.port}"
-            )
+            R.id.serviceDiscoveryToPairing,
+            bundleOf(
+                ADDRESS_BUNDLE_KEY to "ws://${nsdServiceInfo.host.hostAddress}:${nsdServiceInfo.port}",
+            ),
         )
     }
 
     private fun setupObservers() {
-        viewModel.nsdStateLiveData.observe(viewLifecycleOwner, Observer { nsdState ->
-            handleNsdState(nsdState)
-        })
+        viewModel.nsdStateLiveData.observe(
+            viewLifecycleOwner,
+            Observer { nsdState ->
+                handleNsdState(nsdState)
+            },
+        )
     }
 
     private fun handleNsdState(nsdState: NsdState?) {
@@ -79,6 +83,7 @@ class ServiceDiscoveryFragment : BaseFragment() {
                 if (motionContainer.currentState != R.id.end) motionContainer.transitionToEnd()
                 handleServices(nsdState.serviceInfoList)
             }
+
             is NsdState.Completed -> {
                 if (nsdState.serviceInfoList.isNotEmpty()) {
                     handleServices(nsdState.serviceInfoList)
@@ -135,10 +140,11 @@ class ServiceDiscoveryFragment : BaseFragment() {
     private fun goBackToSpecifyDevice() {
         findNavController()
             .navigate(
-                R.id.cancelServiceDiscovery, null,
+                R.id.cancelServiceDiscovery,
+                null,
                 NavOptions.Builder()
                     .setPopUpTo(R.id.specifyDevice, true)
-                    .build()
+                    .build(),
             )
     }
 

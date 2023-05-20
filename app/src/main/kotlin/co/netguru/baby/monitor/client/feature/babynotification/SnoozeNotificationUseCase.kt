@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class SnoozeNotificationUseCase @Inject constructor(
     private val dataRepository: DataRepository,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) {
 
     fun snoozeNotifications(): Disposable {

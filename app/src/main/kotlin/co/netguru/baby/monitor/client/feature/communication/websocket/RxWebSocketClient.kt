@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @Reusable
 class RxWebSocketClient @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
 ) {
 
     private var client: RxWebSocketClient? = null

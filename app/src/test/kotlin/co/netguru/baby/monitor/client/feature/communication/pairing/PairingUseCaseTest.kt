@@ -9,7 +9,13 @@ import co.netguru.baby.monitor.client.feature.client.home.SendFirebaseTokenUseCa
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageParser
 import co.netguru.baby.monitor.client.feature.communication.websocket.RxWebSocketClient
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -48,7 +54,7 @@ class PairingUseCaseTest {
             rxWebSocketClient,
             dataRepository,
             localDateTimeProvider,
-            sendFirebaseTokenUseCase
+            sendFirebaseTokenUseCase,
         )
 
     @Before
@@ -60,24 +66,26 @@ class PairingUseCaseTest {
     fun `should send pairing code`() {
         whenever(rxWebSocketClient.events(address)).doReturn(
             Observable.just<RxWebSocketClient.Event>(
-                RxWebSocketClient.Event.Open
-            )
+                RxWebSocketClient.Event.Open,
+            ),
         )
         whenever(rxWebSocketClient.send(any())).doReturn(Completable.complete())
 
         pairingUseCase.pair(address, pairingCode)
 
-        verify(rxWebSocketClient).send(check {
-            assertEquals(pairingCode, it.pairingCode)
-        })
+        verify(rxWebSocketClient).send(
+            check {
+                assertEquals(pairingCode, it.pairingCode)
+            },
+        )
     }
 
     @Test
     fun `should properly handle new service`() {
         whenever(rxWebSocketClient.events(address)).doReturn(
-            Observable.just<RxWebSocketClient.Event>(
-                RxWebSocketClient.Event.Message(message)
-            )
+            Observable.just(
+                RxWebSocketClient.Event.Message(message),
+            ),
         )
         whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = true))
         whenever(dataRepository.putChildData(any())).doReturn(Completable.complete())
@@ -95,8 +103,8 @@ class PairingUseCaseTest {
     fun `should return false on config fail`() {
         whenever(rxWebSocketClient.events(address)).doReturn(
             Observable.just<RxWebSocketClient.Event>(
-                RxWebSocketClient.Event.Message(message)
-            )
+                RxWebSocketClient.Event.Message(message),
+            ),
         )
         whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = true))
         whenever(dataRepository.doesChildDataExists(any())).doReturn(Single.error(Throwable()))
@@ -113,8 +121,8 @@ class PairingUseCaseTest {
     fun `should disconnect while not approved`() {
         whenever(rxWebSocketClient.events(address)).doReturn(
             Observable.just<RxWebSocketClient.Event>(
-                RxWebSocketClient.Event.Message(message)
-            )
+                RxWebSocketClient.Event.Message(message),
+            ),
         )
         whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = false))
 

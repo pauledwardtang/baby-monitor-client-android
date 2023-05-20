@@ -12,7 +12,10 @@ class CustomSurfaceViewRenderer(context: Context, attrs: AttributeSet?) : Surfac
 
     constructor(context: Context) : this(context, null)
 
-    override fun init(sharedContext: EglBase.Context?, rendererEvents: RendererCommon.RendererEvents?) {
+    override fun init(
+        sharedContext: EglBase.Context?,
+        rendererEvents: RendererCommon.RendererEvents?,
+    ) {
         super.init(sharedContext, rendererEvents)
         initialized = true
     }

@@ -18,9 +18,11 @@ class ReceiveFirebaseTokenUseCaseTest {
         val token = "token"
         receiveFirebaseTokenUseCase.receiveToken(address, token)
 
-        verify(dataRepository).insertClientData(check {
-            assertEquals(address, it.address)
-            assertEquals(token, it.firebaseKey)
-        })
+        verify(dataRepository).insertClientData(
+            check {
+                assertEquals(address, it.address)
+                assertEquals(token, it.firebaseKey)
+            },
+        )
     }
 }

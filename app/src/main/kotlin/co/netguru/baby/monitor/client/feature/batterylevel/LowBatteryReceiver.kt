@@ -8,11 +8,12 @@ import co.netguru.baby.monitor.client.feature.server.ChildMonitorFragmentModule
 import javax.inject.Inject
 
 class LowBatteryReceiver @Inject constructor(
-    @ChildMonitorFragmentModule.LowBatteryHandler private val lowBatteryHandler: () -> Unit
+    @ChildMonitorFragmentModule.LowBatteryHandler private val lowBatteryHandler: () -> Unit,
 ) : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_BATTERY_LOW)
+        if (intent.action != Intent.ACTION_BATTERY_LOW) {
             throw RuntimeException()
+        }
         lowBatteryHandler()
     }
 

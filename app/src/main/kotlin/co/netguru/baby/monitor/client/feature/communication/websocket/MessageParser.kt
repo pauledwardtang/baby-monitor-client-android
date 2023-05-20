@@ -6,7 +6,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MessageParser @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
 ) {
     fun parseWebSocketMessage(event: RxWebSocketClient.Event.Message): Message? {
         return try {

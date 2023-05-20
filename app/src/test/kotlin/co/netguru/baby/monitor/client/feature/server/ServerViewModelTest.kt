@@ -15,7 +15,12 @@ import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message.Companion.RESET_ACTION
 import co.netguru.baby.monitor.client.feature.communication.websocket.WebSocketServerService
 import co.netguru.baby.monitor.client.feature.server.ServerViewModel.Companion.VIDEO_PREVIEW_TOTAL_TIME
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -66,8 +71,8 @@ class ServerViewModelTest {
     private val webSocketServiceBinder: WebSocketServerService.Binder = mock {
         on { clientConnectionStatus() }.doReturn(
             Observable.just(
-                ClientConnectionStatus.CLIENT_CONNECTED
-            )
+                ClientConnectionStatus.CLIENT_CONNECTED,
+            ),
         )
         on { messages() }.doReturn(Observable.just(websocket to Message()))
     }
@@ -77,7 +82,7 @@ class ServerViewModelTest {
             nsdServiceManager,
             dataRepository,
             lazyReceiveFirebaseTokenUseCase,
-            schedulersProvider
+            schedulersProvider,
         )
 
     @Test
@@ -136,8 +141,8 @@ class ServerViewModelTest {
         val webRtcServiceBinder: WebRtcService.Binder = mock()
         whenever(webRtcServiceBinder.getConnectionObservable()).doReturn(
             Observable.just<RtcConnectionState>(
-                RtcConnectionState.Connected
-            )
+                RtcConnectionState.Connected,
+            ),
         )
 
         serverViewModel.cameraState.observeForever(cameraStateObserver)
@@ -157,8 +162,8 @@ class ServerViewModelTest {
         val webRtcServiceBinder: WebRtcService.Binder = mock()
         whenever(webRtcServiceBinder.getConnectionObservable()).doReturn(
             Observable.just<RtcConnectionState>(
-                RtcConnectionState.Disconnected
-            )
+                RtcConnectionState.Disconnected,
+            ),
         )
 
         serverViewModel.cameraState.observeForever(cameraStateObserver)
@@ -222,8 +227,8 @@ class ServerViewModelTest {
         serverViewModel.pulsatingViewStatus.observeForever(clientConnectionStatusObserver)
         whenever(webSocketServiceBinder.clientConnectionStatus()).doReturn(
             Observable.just(
-                ClientConnectionStatus.CLIENT_CONNECTED
-            )
+                ClientConnectionStatus.CLIENT_CONNECTED,
+            ),
         )
 
         serverViewModel.handleWebSocketServerBinder(webSocketServiceBinder)
@@ -232,8 +237,8 @@ class ServerViewModelTest {
 
         whenever(webSocketServiceBinder.clientConnectionStatus()).doReturn(
             Observable.just(
-                ClientConnectionStatus.EMPTY
-            )
+                ClientConnectionStatus.EMPTY,
+            ),
         )
 
         serverViewModel.handleWebSocketServerBinder(webSocketServiceBinder)

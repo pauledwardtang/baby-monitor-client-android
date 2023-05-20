@@ -26,6 +26,7 @@ class CheckInternetConnectionUseCase @Inject constructor() {
             isConnected
         }
     }
+
     companion object {
         private const val TIMEOUT_MS = 1500
         private const val PORT = 53

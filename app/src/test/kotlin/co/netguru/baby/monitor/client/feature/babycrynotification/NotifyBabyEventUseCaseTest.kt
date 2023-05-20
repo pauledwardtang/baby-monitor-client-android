@@ -25,7 +25,7 @@ class NotifyBabyEventUseCaseTest {
     private val notifyBabyEventUseCase =
         NotifyBabyEventUseCase(
             notificationSender,
-            notificationTexts
+            notificationTexts,
         )
 
     @Test
@@ -39,7 +39,7 @@ class NotifyBabyEventUseCaseTest {
         verify(notificationSender).broadcastNotificationToFcm(
             text,
             text,
-            NotificationType.CRY_NOTIFICATION
+            NotificationType.CRY_NOTIFICATION,
         )
     }
 
@@ -54,7 +54,7 @@ class NotifyBabyEventUseCaseTest {
         verify(notificationSender).broadcastNotificationToFcm(
             text,
             text,
-            NotificationType.NOISE_NOTIFICATION
+            NotificationType.NOISE_NOTIFICATION,
         )
     }
 }

@@ -23,14 +23,16 @@ import kotlin.reflect.KClass
 @Suppress("UNCHECKED_CAST")
 @Singleton
 class ViewModelFactory @Inject constructor(
-    private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>
+    private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
         viewModels[modelClass]?.get() as T
 }
 
 @Target(
-    AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
@@ -48,7 +50,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ClientLiveCameraFragmentViewModel::class)
     abstract fun bindClientLiveCameraFragmentViewModel(
-        clientHomeViewModel: ClientLiveCameraFragmentViewModel
+        clientHomeViewModel: ClientLiveCameraFragmentViewModel,
     ): ViewModel
 
     @Binds
@@ -84,7 +86,9 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(ServiceDiscoveryViewModel::class)
-    internal abstract fun bindServiceDiscoveryViewModel(serviceDiscoveryViewModel: ServiceDiscoveryViewModel): ViewModel
+    internal abstract fun bindServiceDiscoveryViewModel(
+        serviceDiscoveryViewModel: ServiceDiscoveryViewModel,
+    ): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

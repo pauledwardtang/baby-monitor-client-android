@@ -88,7 +88,7 @@ class ClientDashboardFragment : BaseFragment() {
             Toast.makeText(
                 requireContext(),
                 getString(R.string.child_not_available),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
         }
     }
@@ -96,7 +96,7 @@ class ClientDashboardFragment : BaseFragment() {
     private fun requestMicrophonePermission() {
         requestPermissions(
             arrayOf(android.Manifest.permission.RECORD_AUDIO),
-            REQUEST_MICROPHONE_PERMISSION
+            REQUEST_MICROPHONE_PERMISSION,
         )
     }
 
@@ -104,7 +104,7 @@ class ClientDashboardFragment : BaseFragment() {
         Snackbar.make(
             requireView(),
             getString(R.string.parent_microphone_permission),
-            Snackbar.LENGTH_SHORT
+            Snackbar.LENGTH_SHORT,
         )
             .setAction(getString(R.string.check_again)) { requestMicrophonePermission() }
             .setDuration(BaseTransientBottomBar.LENGTH_LONG)
@@ -114,7 +114,7 @@ class ClientDashboardFragment : BaseFragment() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         val recordAudioResult = PermissionUtils.getPermissionsRequestResult(
@@ -122,7 +122,7 @@ class ClientDashboardFragment : BaseFragment() {
             REQUEST_MICROPHONE_PERMISSION,
             requestCode,
             grantResults,
-            android.Manifest.permission.RECORD_AUDIO
+            android.Manifest.permission.RECORD_AUDIO,
         )
 
         when (recordAudioResult) {

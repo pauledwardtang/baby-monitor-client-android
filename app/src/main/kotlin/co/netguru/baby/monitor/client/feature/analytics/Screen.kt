@@ -19,5 +19,5 @@ enum class Screen(val screenName: String) {
     ALL_DONE("AllDone"),
     CLIENT_LIVE_CAMERA("ClientLiveCamera"),
     CLIENT_DASHBOARD("ClientDashboard"),
-    CLIENT_ACTIVITY_LOG("ClientActivityLog")
+    CLIENT_ACTIVITY_LOG("ClientActivityLog"),
 }

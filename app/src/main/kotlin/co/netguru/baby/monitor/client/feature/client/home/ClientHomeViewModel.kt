@@ -38,7 +38,7 @@ class ClientHomeViewModel @Inject constructor(
     private val restartAppUseCase: RestartAppUseCase,
     internal val rxWebSocketClient: RxWebSocketClient,
     private val voiceAnalysisUseCase: VoiceAnalysisUseCase,
-    private val messageParser: MessageParser
+    private val messageParser: MessageParser,
 ) : ViewModel(), MessageController {
 
     private var connectionDisposable: Disposable? = null
@@ -71,7 +71,7 @@ class ClientHomeViewModel @Inject constructor(
                 onSuccess = { isConnected ->
                     mutableInternetConnectionAvailability.postValue(isConnected)
                 },
-                onError = { Timber.e(it) }
+                onError = { Timber.e(it) },
             )
     }
 
@@ -80,7 +80,7 @@ class ClientHomeViewModel @Inject constructor(
             .subscribeOn(Schedulers.newThread())
             .subscribeBy(
                 onNext = this::handleNextLogDataList,
-                onError = Timber::e
+                onError = Timber::e,
             )
     }
 
@@ -89,7 +89,7 @@ class ClientHomeViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onComplete = { Timber.i("state saved") },
-                onError = Timber::e
+                onError = Timber::e,
             )
     }
 
@@ -101,9 +101,11 @@ class ClientHomeViewModel @Inject constructor(
 
     @RunsInBackground
     private fun handleNextLogDataList(list: List<LogDataEntity>) {
-        logData.postValue(list.map { data ->
-            data.toLogData(selectedChildLiveData.value?.image)
-        })
+        logData.postValue(
+            list.map { data ->
+                data.toLogData(selectedChildLiveData.value?.image)
+            },
+        )
     }
 
     fun setBackButtonState(backButtonState: BackButtonState) {
@@ -119,21 +121,23 @@ class ClientHomeViewModel @Inject constructor(
                 onNext = { event ->
                     Timber.i("Consuming event: $event.")
                     when (event) {
-                        is RxWebSocketClient.Event.Open, RxWebSocketClient.Event.Connected
+                        is RxWebSocketClient.Event.Open, RxWebSocketClient.Event.Connected,
                         -> handleWebSocketOpen(rxWebSocketClient)
-                        is RxWebSocketClient.Event.Disconnected
+
+                        is RxWebSocketClient.Event.Disconnected,
                         -> mutableSelectedChildAvailability.postValue(false)
+
                         is RxWebSocketClient.Event.Close -> handleWebSocketClose()
                         is RxWebSocketClient.Event.Message -> handleMessage(
                             messageParser.parseWebSocketMessage(
-                                event
-                            )
+                                event,
+                            ),
                         )
                     }
                 },
                 onError = { error ->
                     Timber.i("Websocket error: $error.")
-                }
+                },
             )
     }
 
@@ -160,18 +164,20 @@ class ClientHomeViewModel @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     Timber.d("Baby name sent successfully.")
-                }, onError = { error ->
+                },
+                onError = { error ->
                     errorAction.postValue(error)
-                }
+                },
             )
         openSocketDisposables += voiceAnalysisUseCase.sendInitialVoiceAnalysisOption(client)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onComplete = {
                     Timber.d("Voice analysis sent successfully.")
-                }, onError = { error ->
+                },
+                onError = { error ->
                     errorAction.postValue(error)
-                }
+                },
             )
     }
 

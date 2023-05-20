@@ -17,7 +17,9 @@ abstract class BaseFragment : DaggerFragment(), AnalyticScreen {
     lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ) = inflater.inflate(layoutResource, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

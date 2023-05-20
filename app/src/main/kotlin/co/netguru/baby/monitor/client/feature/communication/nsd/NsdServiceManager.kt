@@ -20,7 +20,7 @@ import javax.inject.Inject
 @Reusable
 class NsdServiceManager @Inject constructor(
     private val nsdManager: NsdManager,
-    private val deviceNameProvider: IDeviceNameProvider
+    private val deviceNameProvider: IDeviceNameProvider,
 ) {
     private val mutableNsdStateLiveData = MutableLiveData<NsdState>()
     internal val nsdStateLiveData: LiveData<NsdState> = mutableNsdStateLiveData
@@ -79,10 +79,13 @@ class NsdServiceManager @Inject constructor(
 
         nsdDiscoveryObservable.subscribeOn(Schedulers.io())
             .concatMapSingle(this::createResolveServiceSingle)
-            .subscribeBy(onNext = this::handleResolvedService,
+            .subscribeBy(
+                onNext = this::handleResolvedService,
                 onError = {
                     handleNsdError(it)
-                }, onComplete = this::handleDiscoveryComplete)
+                },
+                onComplete = this::handleDiscoveryComplete,
+            )
             .addTo(disposables)
         discoveryStatus = DiscoveryStatus.STARTED
     }
@@ -118,7 +121,7 @@ class NsdServiceManager @Inject constructor(
         nsdManager.discoverServices(
             SERVICE_TYPE,
             PROTOCOL_DNS_SD,
-            nsdDiscoveryListener
+            nsdDiscoveryListener,
         )
         emitter.setCancellable {
             nsdManager.stopServiceDiscovery(nsdDiscoveryListener)
@@ -138,7 +141,7 @@ class NsdServiceManager @Inject constructor(
                 object : NsdManager.ResolveListener {
                     override fun onResolveFailed(
                         serviceInfo: NsdServiceInfo?,
-                        errorCode: Int
+                        errorCode: Int,
                     ) {
                         emitter.onError(ResolveFailedException())
                     }
@@ -146,7 +149,8 @@ class NsdServiceManager @Inject constructor(
                     override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                         emitter.onSuccess(serviceInfo)
                     }
-                })
+                },
+            )
         }
     }
 
@@ -156,8 +160,8 @@ class NsdServiceManager @Inject constructor(
             Timber.i("${resolvedServiceInfo.serviceName} service added")
             mutableNsdStateLiveData.postValue(
                 NsdState.InProgress(
-                    serviceInfoList
-                )
+                    serviceInfoList,
+                ),
             )
         }
     }

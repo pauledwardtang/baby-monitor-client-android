@@ -11,8 +11,12 @@ class ServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(nsdServiceInfo: NsdServiceInfo) {
         val deviceName = nsdServiceInfo.serviceName.removeSuffix(NsdServiceManager.SERVICE_NAME)
         itemView.deviceName.text =
-            if (deviceName.isNotEmpty()) deviceName else itemView.resources.getString(
-                R.string.unknown_device
-            )
+            if (deviceName.isNotEmpty()) {
+                deviceName
+            } else {
+                itemView.resources.getString(
+                    R.string.unknown_device,
+                )
+            }
     }
 }

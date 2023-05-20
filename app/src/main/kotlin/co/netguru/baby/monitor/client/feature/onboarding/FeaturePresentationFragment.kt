@@ -1,12 +1,12 @@
 package co.netguru.baby.monitor.client.feature.onboarding
 
 import android.os.Bundle
-import androidx.core.text.HtmlCompat
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
@@ -18,13 +18,14 @@ class FeaturePresentationFragment : BaseFragment() {
 
     override var layoutResource = R.layout.fragment_feature_a
     override val screen: Screen = Screen.ONBOARDING
+
     @Inject
     lateinit var finishOnboardingUseCase: FinishOnboardingUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         layoutResource = when (arguments?.getString(FEATURE_KEY)) {
             FEATURE_B -> R.layout.fragment_feature_b
@@ -39,7 +40,7 @@ class FeaturePresentationFragment : BaseFragment() {
         view.findViewById<TextView>(R.id.tos)?.apply {
             text = HtmlCompat.fromHtml(
                 getString(R.string.tos_confirmation),
-                HtmlCompat.FROM_HTML_MODE_COMPACT
+                HtmlCompat.FROM_HTML_MODE_COMPACT,
             )
             movementMethod = LinkMovementMethod.getInstance()
         }
@@ -66,7 +67,7 @@ class FeaturePresentationFragment : BaseFragment() {
             } else {
                 R.id.featureToFeature
             },
-            bundle
+            bundle,
         )
     }
 

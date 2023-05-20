@@ -5,7 +5,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class FirebaseInstanceManager @Inject constructor(
-    private val firebaseInstanceId: FirebaseInstanceId
+    private val firebaseInstanceId: FirebaseInstanceId,
 ) {
     fun getFirebaseToken(): Single<String> = Single.create { emitter ->
         firebaseInstanceId.instanceId.addOnCompleteListener { task ->

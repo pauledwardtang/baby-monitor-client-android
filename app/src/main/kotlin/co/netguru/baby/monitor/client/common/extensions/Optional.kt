@@ -40,18 +40,22 @@ sealed class Optional<out T : Any> {
     }
 }
 
-fun <T : Any> T?.toOptional(): Optional<T> = if (this == null) Optional.None else Optional.Some(
-        this
-)
+fun <T : Any> T?.toOptional(): Optional<T> = if (this == null) {
+    Optional.None
+} else {
+    Optional.Some(
+        this,
+    )
+}
 
 fun <T : Any> Observable<Optional<T>>.filterOptionalNone(): Observable<T> =
-        this.ofType<Optional.Some<T>>()
-                .map { it.toNullable() }
+    this.ofType<Optional.Some<T>>()
+        .map { it.toNullable() }
 
 fun <T : Any> Single<Optional<T>>.filterOptionalNone(): Maybe<T> =
-        this.filter { it is Optional.Some<T> }
-                .map { it.toNullable() }
+    this.filter { it is Optional.Some<T> }
+        .map { it.toNullable() }
 
 fun <T : Any> Maybe<Optional<T>>.filterOptionalNone(): Maybe<T> =
-        this.filter { it is Optional.Some<T> }
-                .map { it.toNullable() }
+    this.filter { it is Optional.Some<T> }
+        .map { it.toNullable() }

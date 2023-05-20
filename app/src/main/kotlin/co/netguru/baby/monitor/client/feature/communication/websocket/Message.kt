@@ -18,17 +18,17 @@ data class Message(
     // Pairing
     @SerializedName("pairingCode") val pairingCode: String? = null,
     @SerializedName("pairingResponse") val pairingApproved: Boolean? = null,
-    @SerializedName("confirmationId") val confirmationId: String? = null
+    @SerializedName("confirmationId") val confirmationId: String? = null,
 ) {
     data class SdpData(
         @SerializedName("sdp") val sdp: String,
-        @SerializedName("type") val type: String
+        @SerializedName("type") val type: String,
     )
 
     data class IceCandidateData(
         @SerializedName("candidate") val sdp: String,
         @SerializedName("id") val sdpMid: String,
-        @SerializedName("label") val sdpMLineIndex: Int
+        @SerializedName("label") val sdpMLineIndex: Int,
     )
 
     companion object {

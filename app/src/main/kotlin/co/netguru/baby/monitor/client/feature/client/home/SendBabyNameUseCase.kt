@@ -8,7 +8,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SendBabyNameUseCase @Inject constructor(
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
 ) {
     fun streamBabyName(client: RxWebSocketClient): Completable =
         dataRepository.getChildData()

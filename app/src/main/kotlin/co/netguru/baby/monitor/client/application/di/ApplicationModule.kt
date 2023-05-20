@@ -1,3 +1,5 @@
+@file:Suppress("max-line-length")
+
 package co.netguru.baby.monitor.client.application.di
 
 import android.content.Context
@@ -44,20 +46,20 @@ object ApplicationModule {
             Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                DATABASE_NAME
+                DATABASE_NAME,
             )
                 .addMigrations(
                     MIGRATION_1_2,
                     MIGRATION_2_3,
                     MIGRATION_3_4,
-                    MIGRATION_4_5
+                    MIGRATION_4_5,
                 )
                 .build()
         } catch (e: IllegalStateException) {
             Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                DATABASE_NAME
+                DATABASE_NAME,
 
             )
                 .fallbackToDestructiveMigration()
@@ -77,15 +79,31 @@ object ApplicationModule {
     }
     private val MIGRATION_3_4 = object : Migration(3, 4) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE CHILD_DATA ADD COLUMN voiceAnalysisOption  TEXT NOT NULL DEFAULT ${VoiceAnalysisOption.MACHINE_LEARNING.name}")
-            database.execSQL("ALTER TABLE CLIENT_DATA ADD COLUMN voiceAnalysisOption TEXT NOT NULL DEFAULT ${VoiceAnalysisOption.MACHINE_LEARNING.name}")
+            database.execSQL(
+                """
+                    ALTER TABLE CHILD_DATA ADD COLUMN voiceAnalysisOption  TEXT NOT NULL DEFAULT ${VoiceAnalysisOption.MACHINE_LEARNING.name}
+                """.trimIndent(),
+            )
+            database.execSQL(
+                """
+                    ALTER TABLE CLIENT_DATA ADD COLUMN voiceAnalysisOption TEXT NOT NULL DEFAULT ${VoiceAnalysisOption.MACHINE_LEARNING.name}
+                """.trimIndent(),
+            )
         }
     }
 
     private val MIGRATION_4_5 = object : Migration(4, 5) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE CHILD_DATA ADD COLUMN noiseLevel INTEGER NOT NULL DEFAULT ${NoiseDetector.DEFAULT_NOISE_LEVEL}")
-            database.execSQL("ALTER TABLE CLIENT_DATA ADD COLUMN noiseLevel INTEGER NOT NULL DEFAULT ${NoiseDetector.DEFAULT_NOISE_LEVEL}")
+            database.execSQL(
+                """
+                    ALTER TABLE CHILD_DATA ADD COLUMN noiseLevel INTEGER NOT NULL DEFAULT ${NoiseDetector.DEFAULT_NOISE_LEVEL}
+                """.trimIndent(),
+            )
+            database.execSQL(
+                """
+                    ALTER TABLE CLIENT_DATA ADD COLUMN noiseLevel INTEGER NOT NULL DEFAULT ${NoiseDetector.DEFAULT_NOISE_LEVEL}
+                """.trimIndent(),
+            )
         }
     }
 }

@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
 
     <co.netguru.baby.monitor.client.common.view.CustomSurfaceViewRenderer
-            android:id="@+id/liveCameraRemoteRenderer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+        android:id="@+id/liveCameraRemoteRenderer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ProgressBar
-            android:id="@+id/streamProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/all_circle_white_bg"
-            android:indeterminate="true"
-            android:padding="@dimen/spacing_xmedium"
-            />
+        android:id="@+id/streamProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/all_circle_white_bg"
+        android:indeterminate="true"
+        android:padding="@dimen/spacing_xmedium" />
 
     <ImageButton
-            android:id="@+id/pushToSpeakButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/spacing_large"
-            android:background="@drawable/circle_primary_bg"
-            android:padding="@dimen/spacing_xmedium"
-            android:visibility="gone"
-            app:elevation="@dimen/spacing_small"
-            app:srcCompat="@drawable/ic_microphone"
-            tools:visibility="visible"
-            />
+        android:id="@+id/pushToSpeakButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:background="@drawable/circle_primary_bg"
+        android:padding="@dimen/spacing_xmedium"
+        android:visibility="gone"
+        app:elevation="@dimen/spacing_small"
+        app:srcCompat="@drawable/ic_microphone"
+        tools:visibility="visible" />
 </FrameLayout>

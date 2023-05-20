@@ -10,11 +10,12 @@ abstract class RxJavaErrorHandler : Consumer<Throwable> {
 
     override fun accept(throwable: Throwable) = when (throwable) {
         is UndeliverableException -> {
-            //we log such exceptions but avoid app crash for release as we can't do much in such case.
+            // we log such exceptions but avoid app crash for release as we can't do much in such case.
             handleUndeliverableException(throwable)
         }
+
         else -> {
-            //we crash the app else - this is a bug
+            // we crash the app else - this is a bug
             throwable.printStackTrace()
             uncaught(throwable)
         }

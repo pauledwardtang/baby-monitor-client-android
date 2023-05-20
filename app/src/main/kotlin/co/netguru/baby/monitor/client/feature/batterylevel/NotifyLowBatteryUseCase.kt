@@ -6,13 +6,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class NotifyLowBatteryUseCase @Inject constructor(
-    private val notificationSender: FirebaseNotificationSender
+    private val notificationSender: FirebaseNotificationSender,
 ) {
     fun notifyLowBattery(title: String, text: String) =
         notificationSender.broadcastNotificationToFcm(
             title = title,
             text = text,
-            notificationType = NotificationType.LOW_BATTERY_NOTIFICATION
+            notificationType = NotificationType.LOW_BATTERY_NOTIFICATION,
         ).also {
             Timber.d("notifyLowBattery($title, $text)")
         }

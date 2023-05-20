@@ -2,13 +2,14 @@ package co.netguru.baby.monitor.client.feature.analytics
 
 import co.netguru.baby.monitor.client.data.splash.AppState
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisOption
+import java.util.Locale
 
 sealed class UserProperty(val value: String, val key: String) {
     class VoiceAnalysis(voiceAnalysisOption: VoiceAnalysisOption) :
-        UserProperty(voiceAnalysisOption.name.toLowerCase(), VOICE_ANALYSIS_KEY)
+        UserProperty(voiceAnalysisOption.name.lowercase(Locale.getDefault()), VOICE_ANALYSIS_KEY)
 
     class AppStateProperty(appState: AppState) :
-        UserProperty(appState.name.toLowerCase(), APP_STATE_KEY)
+        UserProperty(appState.name.lowercase(Locale.getDefault()), APP_STATE_KEY)
 
     class NoiseLevel(noiseLevel: Int) :
         UserProperty(noiseLevel.toString(), NOISE_LEVEL_KEY)

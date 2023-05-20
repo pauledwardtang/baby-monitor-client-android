@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class ChildMonitorViewModel @Inject constructor(
     private val notifyLowBatteryUseCase: NotifyLowBatteryUseCase,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
@@ -30,7 +30,7 @@ class ChildMonitorViewModel @Inject constructor(
                 },
                 onError = { error ->
                     Timber.w(error, "Error posting low battery notification.")
-                }
+                },
             )
     }
 

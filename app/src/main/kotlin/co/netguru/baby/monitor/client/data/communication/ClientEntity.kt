@@ -9,7 +9,7 @@ import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisOption
 
 @Entity(
     tableName = "CLIENT_DATA",
-    indices = [Index(value = ["firebase_key"], unique = true)]
+    indices = [Index(value = ["firebase_key"], unique = true)],
 )
 data class ClientEntity(
     @ColumnInfo(name = "address") val address: String,
@@ -17,5 +17,5 @@ data class ClientEntity(
     val voiceAnalysisOption: VoiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING,
     val noiseLevel: Int = NoiseDetector.DEFAULT_NOISE_LEVEL,
     // There is only one parent handled right now
-    @PrimaryKey val id: Int? = 0
+    @PrimaryKey val id: Int? = 0,
 )

@@ -23,7 +23,7 @@ class PairingUseCase @Inject constructor(
     private val rxWebSocketClient: RxWebSocketClient,
     private val dataRepository: DataRepository,
     private val localDateTimeProvider: LocalDateTimeProvider,
-    private val sendFirebaseTokenUseCase: SendFirebaseTokenUseCase
+    private val sendFirebaseTokenUseCase: SendFirebaseTokenUseCase,
 ) {
     private val compositeDisposable = CompositeDisposable()
     private val mutablePairingCompletedState = MutableLiveData<Boolean>()
@@ -32,20 +32,24 @@ class PairingUseCase @Inject constructor(
     fun pair(address: URI, pairingCode: String) {
         compositeDisposable += rxWebSocketClient.events(address)
             .subscribeOn(Schedulers.io())
-            .subscribeBy(onNext = {
-                when (it) {
-                    is RxWebSocketClient.Event.Open, RxWebSocketClient.Event.Connected
-                    -> sendPairingCode(pairingCode)
-                    is RxWebSocketClient.Event.Message -> handleMessage(it, address)
-                }
-            }, onError = { mutablePairingCompletedState.postValue(false) })
+            .subscribeBy(
+                onNext = {
+                    when (it) {
+                        is RxWebSocketClient.Event.Open, RxWebSocketClient.Event.Connected,
+                        -> sendPairingCode(pairingCode)
+
+                        is RxWebSocketClient.Event.Message -> handleMessage(it, address)
+                    }
+                },
+                onError = { mutablePairingCompletedState.postValue(false) },
+            )
     }
 
     fun cancelPairing() {
         sendMessage(
             Message(
-                pairingCode = ""
-            )
+                pairingCode = "",
+            ),
         )
     }
 
@@ -57,14 +61,15 @@ class PairingUseCase @Inject constructor(
         compositeDisposable += rxWebSocketClient.send(message)
             .subscribeBy(
                 onComplete = { Timber.i("message sent: $message") },
-                onError = { Timber.e(it) })
+                onError = { Timber.e(it) },
+            )
     }
 
     private fun sendPairingCode(pairingCode: String) {
         sendMessage(
             Message(
-                pairingCode = pairingCode
-            )
+                pairingCode = pairingCode,
+            ),
         )
     }
 
@@ -90,7 +95,7 @@ class PairingUseCase @Inject constructor(
     }
 
     private fun handleNewService(
-        address: URI
+        address: URI,
     ) {
         compositeDisposable += sendFirebaseTokenUseCase
             .sendFirebaseToken(rxWebSocketClient)
@@ -101,9 +106,11 @@ class PairingUseCase @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     mutablePairingCompletedState.postValue(true)
-                }, onError = {
+                },
+                onError = {
                     mutablePairingCompletedState.postValue(false)
-                })
+                },
+            )
     }
 
     private fun addPairingEventToDataBase(address: String) =
@@ -111,8 +118,8 @@ class PairingUseCase @Inject constructor(
             LogDataEntity(
                 DEVICES_PAIRED,
                 localDateTimeProvider.now().toString(),
-                address
-            )
+                address,
+            ),
         )
 
     companion object {

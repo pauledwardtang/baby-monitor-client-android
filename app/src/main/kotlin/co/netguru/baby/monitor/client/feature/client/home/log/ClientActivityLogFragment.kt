@@ -35,13 +35,16 @@ class ClientActivityLogFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
 
-        viewModel.logData.observeNonNull(this, { activities ->
-            if (activities.isNotEmpty()) {
-                logAdapter.setupList(activities)
-            }
-            clientActivityLogRv.setVisible(activities.isNotEmpty())
-            clientActivityLogEndTv.setVisible(activities.isEmpty())
-        })
+        viewModel.logData.observeNonNull(
+            this,
+            { activities ->
+                if (activities.isNotEmpty()) {
+                    logAdapter.setupList(activities)
+                }
+                clientActivityLogRv.setVisible(activities.isNotEmpty())
+                clientActivityLogEndTv.setVisible(activities.isEmpty())
+            },
+        )
     }
 
     override fun onDestroyView() {

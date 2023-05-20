@@ -17,16 +17,19 @@ import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageController
 import co.netguru.baby.monitor.client.feature.communication.websocket.WebSocketServerService
 import co.netguru.baby.monitor.client.feature.onboarding.OnboardingActivity
-import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import co.netguru.baby.monitor.client.feature.settings.ChangeState
+import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_server.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class ServerActivity : DaggerAppCompatActivity(), ServiceConnection,
-    YesNoDialog.YesNoDialogClickListener, MessageController {
+class ServerActivity :
+    DaggerAppCompatActivity(),
+    ServiceConnection,
+    YesNoDialog.YesNoDialogClickListener,
+    MessageController {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     private var webSocketServerServiceBinder: WebSocketServerService.Binder? = null
@@ -46,37 +49,46 @@ class ServerActivity : DaggerAppCompatActivity(), ServiceConnection,
         bindService(
             Intent(this, WebSocketServerService::class.java),
             this,
-            Service.BIND_AUTO_CREATE
+            Service.BIND_AUTO_CREATE,
         )
     }
 
     private fun setupObservers() {
-        configurationViewModel.resetState.observe(this, Observer { resetState ->
-            when (resetState) {
-                is ChangeState.Completed -> handleAppReset()
-            }
-        })
+        configurationViewModel.resetState.observe(
+            this,
+            Observer { resetState ->
+                when (resetState) {
+                    is ChangeState.Completed -> handleAppReset()
+                }
+            },
+        )
 
-        serverViewModel.webSocketAction.observe(this, Observer {
-            if (it == Message.RESET_ACTION) {
-                configurationViewModel.resetApp()
-            } else {
-                Timber.d("Action not handled: $it")
-            }
-        })
+        serverViewModel.webSocketAction.observe(
+            this,
+            Observer {
+                if (it == Message.RESET_ACTION) {
+                    configurationViewModel.resetApp()
+                } else {
+                    Timber.d("Action not handled: $it")
+                }
+            },
+        )
 
-        serverViewModel.shouldDrawerBeOpen.observe(this, Observer { shouldClose ->
-            if (shouldClose) {
-                server_drawer.openDrawer(GravityCompat.END)
-            } else {
-                server_drawer.closeDrawer(GravityCompat.END)
-            }
-        })
+        serverViewModel.shouldDrawerBeOpen.observe(
+            this,
+            Observer { shouldClose ->
+                if (shouldClose) {
+                    server_drawer.openDrawer(GravityCompat.END)
+                } else {
+                    server_drawer.closeDrawer(GravityCompat.END)
+                }
+            },
+        )
     }
 
     private fun handleAppReset() {
         startActivity(
-            Intent(this, OnboardingActivity::class.java)
+            Intent(this, OnboardingActivity::class.java),
         )
         finishAffinity()
     }

@@ -18,7 +18,7 @@ class ResetAppUseCase @Inject constructor(
     private val notificationHandler: NotificationHandler,
     private val firebaseInstanceManager: FirebaseInstanceManager,
     private val dataRepository: DataRepository,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) {
 
     fun resetApp(messageController: MessageController? = null): Completable {
@@ -28,8 +28,8 @@ class ResetAppUseCase @Inject constructor(
                 Completable.fromAction { messageController?.sendMessage(Message(action = RESET_ACTION)) },
                 handleAppState(),
                 dataRepository.deleteAllData(),
-                notificationHandler::clearNotifications.toCompletable()
-            )
+                notificationHandler::clearNotifications.toCompletable(),
+            ),
         )
     }
 

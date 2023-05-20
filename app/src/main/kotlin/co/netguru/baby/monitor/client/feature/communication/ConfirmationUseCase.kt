@@ -13,11 +13,11 @@ import javax.inject.Inject
 
 class ConfirmationUseCase @Inject constructor(
     private val dataRepository: DataRepository,
-    private val schedulersProvider: ISchedulersProvider
+    private val schedulersProvider: ISchedulersProvider,
 ) {
     fun changeValue(
         messageController: MessageController,
-        confirmationItem: ConfirmationItem<*>
+        confirmationItem: ConfirmationItem<*>,
     ): Single<Boolean> {
         return Completable.fromAction {
             messageController.sendMessage(confirmationItem.sentMessage)
@@ -27,11 +27,15 @@ class ConfirmationUseCase @Inject constructor(
                     .filter { it.confirmationId == confirmationItem.sentMessage.confirmationId }
                     .timeout(RESPONSE_TIMEOUT, TimeUnit.SECONDS, schedulersProvider.io())
                     .firstOrError()
-                    .map { true })
+                    .map { true },
+            )
             .doOnSuccess { success ->
-                if (success) confirmationItem.onSuccessAction(dataRepository)
-                    .subscribeBy(
-                        onComplete = { Timber.i("Value updated to ${confirmationItem.value}") })
+                if (success) {
+                    confirmationItem.onSuccessAction(dataRepository)
+                        .subscribeBy(
+                            onComplete = { Timber.i("Value updated to ${confirmationItem.value}") },
+                        )
+                }
             }
             .onErrorReturnItem(false)
     }

@@ -10,36 +10,39 @@ import java.io.File
 import javax.inject.Inject
 
 class FirebaseSharedPreferencesWrapper @Inject constructor(
-        @ConfigurationPreferencesQualifier private val preferences: SharedPreferences
+    @ConfigurationPreferencesQualifier private val preferences: SharedPreferences,
 ) {
     internal fun getSessionUriString(): String? {
         return preferences.getString(
-                FIREBASE_SESSION_URI,
-                null)
+            FIREBASE_SESSION_URI,
+            null,
+        )
     }
 
     internal fun getFileUriString(): String? {
         return preferences.getString(
-                FIREBASE_FILE_URI,
-                null)
+            FIREBASE_FILE_URI,
+            null,
+        )
     }
 
     fun isSessionExpired(): Boolean {
         val uploadDateString = preferences.getString(
-                FIREBASE_UPLOAD_DATE,
-                LocalDateTime.now().toString())
+            FIREBASE_UPLOAD_DATE,
+            LocalDateTime.now().toString(),
+        )
         val weekBefore = LocalDateTime.now().minusWeeks(1)
         return LocalDateTime.parse(uploadDateString).isBefore(weekBefore)
     }
 
     fun isSessionOrFileUriNull(): Boolean {
         return getSessionUriString() == null ||
-                getFileUriString() == null
+            getFileUriString() == null
     }
 
     fun isUploadEnablad() = preferences.getBoolean(
-            FIREBASE_UPLOAD_ENABLED,
-            false
+        FIREBASE_UPLOAD_ENABLED,
+        false,
     )
 
     fun getSessionUri(): Uri {
@@ -68,7 +71,10 @@ class FirebaseSharedPreferencesWrapper @Inject constructor(
         if (getSessionUriString().isNullOrEmpty()) {
             preferences.edit {
                 putString(FIREBASE_SESSION_URI, taskSnapshot.uploadSessionUri.toString())
-                putString(FIREBASE_FILE_URI, filesDir.absolutePath + "/" + taskSnapshot.storage.path)
+                putString(
+                    FIREBASE_FILE_URI,
+                    filesDir.absolutePath + "/" + taskSnapshot.storage.path,
+                )
                 putString(FIREBASE_UPLOAD_DATE, LocalDateTime.now().toString())
             }
         }

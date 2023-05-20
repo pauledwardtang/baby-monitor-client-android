@@ -1,6 +1,13 @@
 package co.netguru.baby.monitor.client.feature.communication.webrtc.observers
 
-import co.netguru.baby.monitor.client.feature.communication.webrtc.*
+import co.netguru.baby.monitor.client.feature.communication.webrtc.ConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.GatheringState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnAddStream
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidateAdded
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidatesChange
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidatesRemoved
+import co.netguru.baby.monitor.client.feature.communication.webrtc.RtcConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.StreamState
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.webrtc.IceCandidate
@@ -52,6 +59,7 @@ class ConnectionObserver : DefaultObserver() {
                 streamSubject.onComplete()
                 null
             }
+
             else -> null
         }
         rtcConnectionState?.run { streamSubject.onNext(ConnectionState(this)) }

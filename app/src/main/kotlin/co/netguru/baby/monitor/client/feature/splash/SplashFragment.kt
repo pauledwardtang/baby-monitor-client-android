@@ -44,7 +44,7 @@ class SplashFragment : BaseFragment() {
             .timer(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onComplete = { handleSplashDelay(appState) }
+                onComplete = { handleSplashDelay(appState) },
             ).addTo(compositeDisposable)
     }
 
@@ -54,13 +54,16 @@ class SplashFragment : BaseFragment() {
                 findNavController().navigate(R.id.splashToServer)
                 requireActivity().finish()
             }
+
             AppState.CLIENT -> {
                 findNavController().navigate(R.id.splashToClientHome)
                 requireActivity().finish()
             }
+
             AppState.UNDEFINED -> {
                 findNavController().navigate(R.id.splashToInfoAboutDevices)
             }
+
             AppState.FIRST_OPEN -> {
                 findNavController().navigate(R.id.splashToOnboarding)
             }

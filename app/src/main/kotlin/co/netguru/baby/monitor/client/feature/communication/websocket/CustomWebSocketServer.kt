@@ -12,12 +12,12 @@ import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
 class CustomWebSocketServer(
-        port: Int? = null,
-        private val onMessageReceived: (WebSocket?, String?) -> Unit
+    port: Int? = null,
+    private val onMessageReceived: (WebSocket?, String?) -> Unit,
 ) : WebSocketServer(InetSocketAddress(port ?: PORT)) {
 
     private val connectedClientsSubject =
-            BehaviorSubject.createDefault(0)
+        BehaviorSubject.createDefault(0)
 
     init {
         isReuseAddr = true
@@ -60,7 +60,7 @@ class CustomWebSocketServer(
     }
 
     fun connectedClients(): Observable<Int> =
-            connectedClientsSubject
+        connectedClientsSubject
 
     fun startServer() = Completable.fromAction {
         start()

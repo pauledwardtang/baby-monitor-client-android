@@ -1,6 +1,10 @@
 package co.netguru.baby.monitor.client.feature.communication.webrtc.observers
 
-import org.webrtc.*
+import org.webrtc.DataChannel
+import org.webrtc.IceCandidate
+import org.webrtc.MediaStream
+import org.webrtc.PeerConnection
+import org.webrtc.RtpReceiver
 
 open class DefaultObserver : PeerConnection.Observer {
     override fun onIceCandidate(iceCandidate: IceCandidate) = Unit

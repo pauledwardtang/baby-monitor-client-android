@@ -38,12 +38,15 @@ class ServerSettingsFragment : BaseFragment() {
     }
 
     private fun setupObservers() {
-        configurationViewModel.resetState.observe(viewLifecycleOwner, Observer { resetState ->
-            when (resetState) {
-                is ChangeState.InProgress -> setupResetButton(true)
-                is ChangeState.Failed -> setupResetButton(false)
-            }
-        })
+        configurationViewModel.resetState.observe(
+            viewLifecycleOwner,
+            Observer { resetState ->
+                when (resetState) {
+                    is ChangeState.InProgress -> setupResetButton(true)
+                    is ChangeState.Failed -> setupResetButton(false)
+                }
+            },
+        )
     }
 
     private fun setupViews() {

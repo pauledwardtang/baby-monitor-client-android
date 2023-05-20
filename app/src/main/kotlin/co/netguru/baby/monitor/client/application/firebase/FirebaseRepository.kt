@@ -21,7 +21,7 @@ import java.io.File
 
 class FirebaseRepository(
     private val preferencesWrapper: FirebaseSharedPreferencesWrapper,
-    private val context: Context
+    private val context: Context,
 ) {
     private var storageRef: StorageReference? = null
     private val directory = context.getDir(WavFileGenerator.DIRECTORY_NAME, Context.MODE_PRIVATE)
@@ -46,7 +46,7 @@ class FirebaseRepository(
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onComplete = { uploadAllRecordingsToFirebaseStorage() },
-                    onError = Timber::e
+                    onError = Timber::e,
                 )
                 .addTo(compositeDisposable)
         }?.addOnProgressListener { taskSnapshot ->
@@ -79,8 +79,9 @@ class FirebaseRepository(
         addListeners(
             storageRef?.putFile(
                 preferencesWrapper.getFileUri(),
-                StorageMetadata.Builder().build(), preferencesWrapper.getSessionUri()
-            )
+                StorageMetadata.Builder().build(),
+                preferencesWrapper.getSessionUri(),
+            ),
         )
     }
 

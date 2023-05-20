@@ -17,7 +17,7 @@ class SeekBarProgress : RelativeLayout {
     constructor(context: Context, attrs: AttributeSet?, attributeSetId: Int) : super(
         context,
         attrs,
-        attributeSetId
+        attributeSetId,
     )
 
     init {
@@ -49,7 +49,7 @@ class SeekBarProgress : RelativeLayout {
     private fun setAnimatedDrawable(success: Boolean) {
         val animatedVectorDrawable = AppCompatResources.getDrawable(
             context,
-            if (success) R.drawable.animated_done else R.drawable.animated_fail
+            if (success) R.drawable.animated_done else R.drawable.animated_fail,
         ) as? AnimatedVectorDrawable
         animatedVectorDrawable?.let {
             progressIcon.setImageDrawable(it)

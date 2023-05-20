@@ -28,7 +28,7 @@ class VoiceAnalysisController @Inject constructor(
     private val dataRepository: DataRepository,
     private val machineLearning: MachineLearning,
     private val analyticsManager: AnalyticsManager,
-    private val recordingController: RecordingController
+    private val recordingController: RecordingController,
 ) : ServiceController<VoiceAnalysisService> {
 
     private val disposables = CompositeDisposable()
@@ -47,12 +47,15 @@ class VoiceAnalysisController @Inject constructor(
         notificationHandler.showForegroundNotification(service)
         dataRepository.getClientData()
             .subscribeOn(Schedulers.io())
-            .subscribeBy(onSuccess = {
-                voiceAnalysisOption = it.voiceAnalysisOption
-                noiseLevel = it.noiseLevel
-                analyticsManager.setUserProperty(UserProperty.VoiceAnalysis(voiceAnalysisOption))
-                startRecording()
-            }, onComplete = this::startRecording)
+            .subscribeBy(
+                onSuccess = {
+                    voiceAnalysisOption = it.voiceAnalysisOption
+                    noiseLevel = it.noiseLevel
+                    analyticsManager.setUserProperty(UserProperty.VoiceAnalysis(voiceAnalysisOption))
+                    startRecording()
+                },
+                onComplete = this::startRecording,
+            )
             .addTo(disposables)
     }
 
@@ -69,7 +72,7 @@ class VoiceAnalysisController @Inject constructor(
                         is RecordingData.MachineLearning -> handleRecordingData(it)
                     }
                 },
-                onError = Timber::e
+                onError = Timber::e,
             )
     }
 
@@ -94,10 +97,10 @@ class VoiceAnalysisController @Inject constructor(
                 onSuccess = { map ->
                     handleMachineLearningData(
                         map,
-                        recordingData.byteArray
+                        recordingData.byteArray,
                     )
                 },
-                onError = { error -> voiceAnalysisService?.complain("ML model error", error) }
+                onError = { error -> voiceAnalysisService?.complain("ML model error", error) },
             ).addTo(disposables)
     }
 
@@ -107,7 +110,7 @@ class VoiceAnalysisController @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { decibels -> handleNoiseDetectorData(decibels) },
-                onError = { error -> voiceAnalysisService?.complain("Noise detector error", error) }
+                onError = { error -> voiceAnalysisService?.complain("Noise detector error", error) },
             ).addTo(disposables)
     }
 
@@ -132,7 +135,7 @@ class VoiceAnalysisController @Inject constructor(
                         .subscribeOn(Schedulers.io())
                         .subscribeBy(
                             onSuccess = { succeed -> Timber.i("File saved $succeed") },
-                            onError = Timber::e
+                            onError = Timber::e,
                         ).addTo(disposables)
                 }
             }

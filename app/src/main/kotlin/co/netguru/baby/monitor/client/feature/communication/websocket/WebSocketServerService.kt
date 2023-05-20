@@ -17,8 +17,10 @@ import javax.inject.Inject
 class WebSocketServerService : Service() {
 
     private lateinit var serverHandler: WebSocketServerHandler
+
     @Inject
     internal lateinit var gson: Gson
+
     @Inject
     internal lateinit var debugNotificationManager: DebugNotificationManager
 

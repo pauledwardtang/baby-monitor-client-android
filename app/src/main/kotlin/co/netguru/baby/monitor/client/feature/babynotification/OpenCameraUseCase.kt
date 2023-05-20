@@ -10,7 +10,7 @@ import co.netguru.baby.monitor.client.feature.client.home.ClientHomeActivity
 import javax.inject.Inject
 
 class OpenCameraUseCase @Inject constructor(
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) {
     fun openLiveClientCamera(navDeepLinkBuilder: NavDeepLinkBuilder, snoozeDialogArgument: Bundle) {
         analyticsManager.logEvent(Event.Simple(EventType.NOTIFICATION_OPEN_CAMERA))

@@ -26,7 +26,7 @@ class ConfigurationViewModel @Inject constructor(
     private val resetAppUseCase: ResetAppUseCase,
     private val firebaseRepository: FirebaseRepository,
     private val confirmationUseCase: ConfirmationUseCase,
-    private val randomiser: Randomiser
+    private val randomiser: Randomiser,
 ) : ViewModel() {
 
     var noiseLevelInitialValue: Int = NoiseDetector.DEFAULT_NOISE_LEVEL
@@ -55,20 +55,22 @@ class ConfigurationViewModel @Inject constructor(
                 onError = {
                     mutableResetState.postValue(ChangeState.Failed)
                     Timber.w(it)
-                }
+                },
             )
     }
 
     fun chooseVoiceAnalysisOption(
         messageController: MessageController,
-        voiceAnalysisOption: VoiceAnalysisOption
+        voiceAnalysisOption: VoiceAnalysisOption,
     ) {
         disposables += confirmationUseCase.changeValue(
             messageController,
-            getVoiceAnalysisConfirmationItem(voiceAnalysisOption)
+            getVoiceAnalysisConfirmationItem(voiceAnalysisOption),
         )
-            .doOnSubscribe { mutableVoiceAnalysisOptionState
-                .postValue(ChangeState.InProgress to null) }
+            .doOnSubscribe {
+                mutableVoiceAnalysisOptionState
+                    .postValue(ChangeState.InProgress to null)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
@@ -79,21 +81,23 @@ class ConfigurationViewModel @Inject constructor(
                         } else {
                             val previousOption =
                                 when (voiceAnalysisOption) {
-                                    VoiceAnalysisOption.MACHINE_LEARNING
+                                    VoiceAnalysisOption.MACHINE_LEARNING,
                                     -> VoiceAnalysisOption.NOISE_DETECTION
-                                    VoiceAnalysisOption.NOISE_DETECTION
+
+                                    VoiceAnalysisOption.NOISE_DETECTION,
                                     -> VoiceAnalysisOption.MACHINE_LEARNING
                                 }
                             ChangeState.Failed to previousOption
-                        }
+                        },
                     )
                 },
-                onError = { Timber.e(it) }
+                onError = { Timber.e(it) },
             )
     }
 
-    private fun getVoiceAnalysisConfirmationItem(voiceAnalysisOption: VoiceAnalysisOption)
-            : ConfirmationItem<VoiceAnalysisOption> {
+    private fun getVoiceAnalysisConfirmationItem(
+        voiceAnalysisOption: VoiceAnalysisOption,
+    ): ConfirmationItem<VoiceAnalysisOption> {
         return object : ConfirmationItem<VoiceAnalysisOption> {
             override fun onSuccessAction(dataRepository: DataRepository): Completable =
                 dataRepository.updateVoiceAnalysisOption(voiceAnalysisOption)
@@ -102,7 +106,7 @@ class ConfigurationViewModel @Inject constructor(
             override val sentMessage = Message(
                 voiceAnalysisOption = voiceAnalysisOption.name,
                 confirmationId = randomiser.getRandomDigits(NUMBERS_OF_DIGITS_IN_ID)
-                    .joinToString("")
+                    .joinToString(""),
             )
         }
     }
@@ -116,10 +120,12 @@ class ConfigurationViewModel @Inject constructor(
     fun changeNoiseLevel(messageController: MessageController, level: Int) {
         disposables += confirmationUseCase.changeValue(
             messageController,
-            getNoiseLevelConfirmationItem(level)
+            getNoiseLevelConfirmationItem(level),
         )
-            .doOnSubscribe { mutableNoiseLevelState
-                .postValue(ChangeState.InProgress to null) }
+            .doOnSubscribe {
+                mutableNoiseLevelState
+                    .postValue(ChangeState.InProgress to null)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
@@ -133,7 +139,7 @@ class ConfigurationViewModel @Inject constructor(
                             .postValue(ChangeState.Failed to noiseLevelInitialValue)
                     }
                 },
-                onError = { Timber.e(it) }
+                onError = { Timber.e(it) },
             )
     }
 
@@ -146,7 +152,7 @@ class ConfigurationViewModel @Inject constructor(
             override val sentMessage = Message(
                 noiseLevel = level,
                 confirmationId = randomiser.getRandomDigits(NUMBERS_OF_DIGITS_IN_ID)
-                    .joinToString("")
+                    .joinToString(""),
             )
         }
     }
