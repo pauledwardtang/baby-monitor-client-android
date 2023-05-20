@@ -41,6 +41,7 @@ class DebugModule @Inject constructor() {
                         cryingProbability: Float,
                         decibels: Int,
                     ),
+
                 ->
                 DebugState(notificationInformation, cryingProbability, decibels)
             }

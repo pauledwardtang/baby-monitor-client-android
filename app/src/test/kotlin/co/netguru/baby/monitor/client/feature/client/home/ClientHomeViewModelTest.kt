@@ -26,10 +26,10 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import java.net.URI
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import java.net.URI
 
 class ClientHomeViewModelTest {
 

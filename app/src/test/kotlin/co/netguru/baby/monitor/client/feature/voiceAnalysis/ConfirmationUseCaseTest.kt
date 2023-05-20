@@ -16,8 +16,8 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import org.junit.Test
 import java.util.concurrent.TimeUnit
+import org.junit.Test
 
 class ConfirmationUseCaseTest {
 

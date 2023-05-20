@@ -22,9 +22,9 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import java.util.Locale
 import org.junit.Rule
 import org.junit.Test
-import java.util.Locale
 
 class VoiceAnalysisControllerTest {
 

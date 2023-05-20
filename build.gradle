@@ -1,6 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-
     ext {
         kotlinVersion = '1.6.21'
     }
@@ -10,6 +9,7 @@ buildscript {
         mavenCentral()
         mavenLocal()
         maven { url "https://plugins.gradle.org/m2/" }
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -18,34 +18,35 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'com.google.firebase:perf-plugin:1.4.1'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.1.1"
+    id "io.gitlab.arturbosch.detekt" version "$detektVersion"
 }
 
-dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.1.1"
-}
-
-tasks.register('detektAll', io.gitlab.arturbosch.detekt.Detekt) {
-    description = "Runs detekt analysis over whole code base without the starting overhead for each module."
-    parallel = true
-    config = files("$rootDir/default-detekt-config.yml")
-    setSource(files(projectDir))
-    include("**/*.kt")
-    include("**/*.kts")
-    exclude("**/resources/**")
-    exclude("**/build/**")
-    reports {
-        xml.enabled = true
-        html.enabled = false
-        txt.enabled = false
-    }
-}
+apply plugin: "io.gitlab.arturbosch.detekt"
 
 allprojects {
+    detekt {
+        toolVersion = detektVersion
+        parallel = true
+        config.setFrom(files(rootProject.file("detekt-config.yml")))
+        ignoreFailures = true
+        buildUponDefaultConfig = true
+    }
+    tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+            txt.required.set(false)
+            sarif.required.set(false)
+            md.required.set(true)
+        }
+        exclude("**/resources/**")
+        exclude("**/build/**")
+    }
     repositories {
         google()
         jcenter()
