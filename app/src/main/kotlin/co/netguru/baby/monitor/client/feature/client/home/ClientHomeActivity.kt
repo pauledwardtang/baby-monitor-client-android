@@ -22,12 +22,12 @@ import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
+import java.net.URI
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_client_home.*
 import kotlinx.android.synthetic.main.toolbar_child.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import timber.log.Timber
-import java.net.URI
-import javax.inject.Inject
 
 class ClientHomeActivity :
     DaggerAppCompatActivity(),

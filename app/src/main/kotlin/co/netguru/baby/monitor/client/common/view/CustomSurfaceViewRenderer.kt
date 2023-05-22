@@ -6,7 +6,10 @@ import org.webrtc.EglBase
 import org.webrtc.RendererCommon
 import org.webrtc.SurfaceViewRenderer
 
-class CustomSurfaceViewRenderer(context: Context, attrs: AttributeSet?) : SurfaceViewRenderer(context, attrs) {
+class CustomSurfaceViewRenderer(context: Context, attrs: AttributeSet?) : SurfaceViewRenderer(
+    context,
+    attrs,
+) {
 
     internal var initialized = false
 

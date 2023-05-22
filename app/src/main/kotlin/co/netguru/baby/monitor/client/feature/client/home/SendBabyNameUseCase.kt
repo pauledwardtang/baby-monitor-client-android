@@ -4,8 +4,8 @@ import co.netguru.baby.monitor.client.data.DataRepository
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.communication.websocket.RxWebSocketClient
 import io.reactivex.Completable
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class SendBabyNameUseCase @Inject constructor(
     private val dataRepository: DataRepository,

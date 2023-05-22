@@ -5,9 +5,9 @@ import android.net.Uri
 import co.netguru.baby.monitor.client.application.di.ConfigurationPreferencesQualifier
 import co.netguru.baby.monitor.client.common.extensions.edit
 import com.google.firebase.storage.UploadTask
-import org.threeten.bp.LocalDateTime
 import java.io.File
 import javax.inject.Inject
+import org.threeten.bp.LocalDateTime
 
 class FirebaseSharedPreferencesWrapper @Inject constructor(
     @ConfigurationPreferencesQualifier private val preferences: SharedPreferences,

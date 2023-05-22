@@ -19,8 +19,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class BabyMonitorMessagingService : FirebaseMessagingService() {
 

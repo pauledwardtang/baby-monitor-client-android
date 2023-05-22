@@ -81,8 +81,16 @@ class ActivityLogAdapter : RecyclerView.Adapter<LogsViewHolder>(), StickyHeaderI
             val baseText = data.timeStamp.format(DateProvider.headerFormatter)
 
             textView.text = when {
-                data.timeStamp.isAfter(today) -> header.context.getString(R.string.date_today, baseText)
-                data.timeStamp.isAfter(yesterday) -> header.context.getString(R.string.date_yesterday, baseText)
+                data.timeStamp.isAfter(today) -> header.context.getString(
+                    R.string.date_today,
+                    baseText,
+                )
+
+                data.timeStamp.isAfter(yesterday) -> header.context.getString(
+                    R.string.date_yesterday,
+                    baseText,
+                )
+
                 else -> baseText
             }
         }

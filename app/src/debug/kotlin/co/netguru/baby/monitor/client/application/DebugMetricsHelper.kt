@@ -1,8 +1,8 @@
 package co.netguru.baby.monitor.client.application
 
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+import timber.log.Timber
 
 /**
  * Helper class that initializes a set of debugging tools

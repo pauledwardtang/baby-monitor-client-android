@@ -9,9 +9,9 @@ import androidx.navigation.fragment.findNavController
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
 import co.netguru.baby.monitor.client.feature.analytics.Screen
-import kotlinx.android.synthetic.main.fragment_pairing.*
 import java.net.URI
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_pairing.*
 
 class PairingFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_pairing

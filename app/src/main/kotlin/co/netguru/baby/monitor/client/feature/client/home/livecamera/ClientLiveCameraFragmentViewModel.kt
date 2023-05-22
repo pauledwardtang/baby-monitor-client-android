@@ -61,8 +61,14 @@ class ClientLiveCameraFragmentViewModel @Inject constructor(
 
     private fun handleStreamStateChange(streamState: StreamState) {
         when ((streamState as? ConnectionState)?.connectionState) {
-            RtcConnectionState.Connected -> analyticsManager.logEvent(Event.Simple(EventType.VIDEO_STREAM_CONNECTED))
-            RtcConnectionState.Error -> analyticsManager.logEvent(Event.Simple(EventType.VIDEO_STREAM_ERROR))
+            RtcConnectionState.Connected -> analyticsManager.logEvent(
+                Event.Simple(EventType.VIDEO_STREAM_CONNECTED),
+            )
+
+            RtcConnectionState.Error -> analyticsManager.logEvent(
+                Event.Simple(EventType.VIDEO_STREAM_ERROR),
+            )
+
             else -> Unit
         }
         mutableStreamState.postValue(streamState)

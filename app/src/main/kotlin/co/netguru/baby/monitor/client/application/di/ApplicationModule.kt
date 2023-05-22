@@ -69,7 +69,9 @@ object ApplicationModule {
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("DELETE FROM CLIENT_DATA")
-            database.execSQL("CREATE UNIQUE INDEX index_client_data_firebase_key ON CLIENT_DATA(firebase_key)")
+            database.execSQL(
+                "CREATE UNIQUE INDEX index_client_data_firebase_key ON CLIENT_DATA(firebase_key)",
+            )
         }
     }
     private val MIGRATION_2_3 = object : Migration(2, 3) {

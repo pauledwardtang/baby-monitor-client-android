@@ -10,9 +10,9 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import org.java_websocket.WebSocket
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class WebSocketServerHandler(
     private val handleMessage: (WebSocket?, String?) -> Unit,

@@ -19,12 +19,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import java.net.URI
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
-import java.net.URI
 
 class PairingUseCaseTest {
 
@@ -87,7 +87,9 @@ class PairingUseCaseTest {
                 RxWebSocketClient.Event.Message(message),
             ),
         )
-        whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = true))
+        whenever(messageParser.parseWebSocketMessage(any())).doReturn(
+            Message(pairingApproved = true),
+        )
         whenever(dataRepository.putChildData(any())).doReturn(Completable.complete())
         whenever(dataRepository.insertLogToDatabase(any())).doReturn(Completable.complete())
 
@@ -106,7 +108,9 @@ class PairingUseCaseTest {
                 RxWebSocketClient.Event.Message(message),
             ),
         )
-        whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = true))
+        whenever(messageParser.parseWebSocketMessage(any())).doReturn(
+            Message(pairingApproved = true),
+        )
         whenever(dataRepository.doesChildDataExists(any())).doReturn(Single.error(Throwable()))
         whenever(dataRepository.putChildData(any())).doReturn(Completable.error(Throwable()))
         whenever(dataRepository.insertLogToDatabase(any())).doReturn(Completable.error(Throwable()))
@@ -124,7 +128,9 @@ class PairingUseCaseTest {
                 RxWebSocketClient.Event.Message(message),
             ),
         )
-        whenever(messageParser.parseWebSocketMessage(any())).doReturn(Message(pairingApproved = false))
+        whenever(messageParser.parseWebSocketMessage(any())).doReturn(
+            Message(pairingApproved = false),
+        )
 
         pairingUseCase.pair(address, pairingCode)
 

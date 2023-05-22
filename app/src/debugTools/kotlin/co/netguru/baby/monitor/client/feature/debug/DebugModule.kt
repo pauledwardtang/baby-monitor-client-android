@@ -3,11 +3,11 @@ package co.netguru.baby.monitor.client.feature.debug
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
+import javax.inject.Singleton
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class DebugModule @Inject constructor() {
@@ -41,7 +41,6 @@ class DebugModule @Inject constructor() {
                         cryingProbability: Float,
                         decibels: Int,
                     ),
-
                 ->
                 DebugState(notificationInformation, cryingProbability, decibels)
             }

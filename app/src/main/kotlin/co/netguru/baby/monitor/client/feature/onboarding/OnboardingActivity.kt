@@ -18,9 +18,15 @@ class OnboardingActivity : AppCompatActivity() {
         if (controller == R.id.permissionMicrophone || controller == R.id.permissionMicrophone ||
             controller == R.id.setupInformation
         ) {
-            findNavController(R.id.onboardingNavigationHostFragment).popBackStack(R.id.connectWiFi, false)
+            findNavController(R.id.onboardingNavigationHostFragment).popBackStack(
+                R.id.connectWiFi,
+                false,
+            )
         } else if (controller == R.id.allDone) {
-            findNavController(R.id.onboardingNavigationHostFragment).popBackStack(R.id.parentDeviceInfo, false)
+            findNavController(R.id.onboardingNavigationHostFragment).popBackStack(
+                R.id.parentDeviceInfo,
+                false,
+            )
         } else {
             super.onBackPressed()
         }

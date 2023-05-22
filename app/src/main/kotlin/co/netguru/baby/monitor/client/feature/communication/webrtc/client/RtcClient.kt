@@ -158,7 +158,9 @@ class RtcClient(
             .subscribe { streamState ->
                 when (streamState) {
                     is OnIceCandidatesChange ->
-                        rtcClientMessageController.handleIceCandidateChange(streamState.iceCandidateState)
+                        rtcClientMessageController.handleIceCandidateChange(
+                            streamState.iceCandidateState,
+                        )
 
                     is OnAddStream ->
                         handleMediaStream(streamState.mediaStream)

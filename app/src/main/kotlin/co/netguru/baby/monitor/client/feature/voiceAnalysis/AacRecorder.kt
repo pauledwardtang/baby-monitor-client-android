@@ -4,8 +4,8 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import io.reactivex.Observable
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class AacRecorder @Inject constructor() {
 

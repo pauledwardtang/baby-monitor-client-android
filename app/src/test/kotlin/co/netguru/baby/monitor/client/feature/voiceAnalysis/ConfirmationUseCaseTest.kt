@@ -57,7 +57,9 @@ class ConfirmationUseCaseTest {
             .assertComplete()
 
         verify(messageController)
-            .sendMessage(argThat { voiceAnalysisOption == VoiceAnalysisOption.NOISE_DETECTION.name })
+            .sendMessage(
+                argThat { voiceAnalysisOption == VoiceAnalysisOption.NOISE_DETECTION.name },
+            )
     }
 
     @Test

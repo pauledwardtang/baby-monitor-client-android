@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
 import co.netguru.baby.monitor.client.feature.analytics.Screen
-import kotlinx.android.synthetic.main.onboarding_buttons.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.onboarding_buttons.*
 
 class FeaturePresentationFragment : BaseFragment() {
 

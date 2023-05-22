@@ -3,13 +3,13 @@ package co.netguru.baby.monitor.client.feature.communication.websocket
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import java.net.InetSocketAddress
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
 import timber.log.Timber
-import java.net.InetSocketAddress
-import java.nio.ByteBuffer
-import java.nio.charset.Charset
 
 class CustomWebSocketServer(
     port: Int? = null,

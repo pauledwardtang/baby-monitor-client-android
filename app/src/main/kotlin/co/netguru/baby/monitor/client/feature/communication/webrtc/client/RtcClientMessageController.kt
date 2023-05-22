@@ -10,10 +10,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.net.URI
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription
 import timber.log.Timber
-import java.net.URI
 
 class RtcClientMessageController(
     private val messageParser: MessageParser,
@@ -46,7 +46,11 @@ class RtcClientMessageController(
     }
 
     fun handleIceCandidateChange(iceCandidateState: IceCandidateState) {
-        if (iceCandidateState is OnIceCandidateAdded) sendIceCandidate(iceCandidateState.iceCandidate)
+        if (iceCandidateState is OnIceCandidateAdded) {
+            sendIceCandidate(
+                iceCandidateState.iceCandidate,
+            )
+        }
     }
 
     private fun sendIceCandidate(iceCandidate: IceCandidate) {

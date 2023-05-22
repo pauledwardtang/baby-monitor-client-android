@@ -16,9 +16,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+import timber.log.Timber
 
 class SettingsViewModel @Inject constructor(
     private val dataRepository: DataRepository,
@@ -84,7 +84,9 @@ class SettingsViewModel @Inject constructor(
             activity.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + activity.packageName),
+                    Uri.parse(
+                        "http://play.google.com/store/apps/details?id=" + activity.packageName,
+                    ),
                 ),
             )
         }

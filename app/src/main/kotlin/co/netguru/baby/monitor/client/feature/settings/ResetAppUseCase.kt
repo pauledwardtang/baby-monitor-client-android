@@ -25,7 +25,11 @@ class ResetAppUseCase @Inject constructor(
         analyticsManager.logEvent(Event.Simple(EventType.RESET_APP))
         return Completable.merge(
             listOf(
-                Completable.fromAction { messageController?.sendMessage(Message(action = RESET_ACTION)) },
+                Completable.fromAction {
+                    messageController?.sendMessage(
+                        Message(action = RESET_ACTION),
+                    )
+                },
                 handleAppState(),
                 dataRepository.deleteAllData(),
                 notificationHandler::clearNotifications.toCompletable(),

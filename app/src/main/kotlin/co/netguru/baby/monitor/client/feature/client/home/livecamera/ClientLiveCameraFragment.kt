@@ -19,10 +19,10 @@ import co.netguru.baby.monitor.client.feature.communication.webrtc.ConnectionSta
 import co.netguru.baby.monitor.client.feature.communication.webrtc.RtcConnectionState
 import co.netguru.baby.monitor.client.feature.communication.webrtc.StreamState
 import co.netguru.baby.monitor.client.feature.communication.websocket.RxWebSocketClient
-import kotlinx.android.synthetic.main.fragment_client_live_camera.*
-import timber.log.Timber
 import java.net.URI
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_client_live_camera.*
+import timber.log.Timber
 
 class ClientLiveCameraFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_client_live_camera

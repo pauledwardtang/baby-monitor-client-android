@@ -7,9 +7,9 @@ import co.netguru.baby.monitor.client.feature.communication.websocket.MessageCon
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 class ConfirmationUseCase @Inject constructor(
     private val dataRepository: DataRepository,

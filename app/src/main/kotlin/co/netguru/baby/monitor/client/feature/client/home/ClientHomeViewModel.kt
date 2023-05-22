@@ -26,9 +26,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.net.URI
 import javax.inject.Inject
+import timber.log.Timber
 
 class ClientHomeViewModel @Inject constructor(
     private val dataRepository: DataRepository,

@@ -26,12 +26,12 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import org.java_websocket.WebSocket
-import org.junit.Rule
-import org.junit.Test
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
+import org.java_websocket.WebSocket
+import org.junit.Rule
+import org.junit.Test
 
 class ServerViewModelTest {
 
@@ -108,7 +108,9 @@ class ServerViewModelTest {
         serverViewModel.resetTimer()
         timerTestScheduler.advanceTimeBy(passedTime, TimeUnit.SECONDS)
 
-        assert(serverViewModel.timer.value == VIDEO_PREVIEW_TOTAL_TIME - passedTime - startingFromOne)
+        assert(
+            serverViewModel.timer.value == VIDEO_PREVIEW_TOTAL_TIME - passedTime - startingFromOne,
+        )
     }
 
     @Test

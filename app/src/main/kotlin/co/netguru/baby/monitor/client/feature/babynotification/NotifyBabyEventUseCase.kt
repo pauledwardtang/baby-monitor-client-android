@@ -5,8 +5,8 @@ import co.netguru.baby.monitor.client.feature.firebasenotification.NotificationT
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import timber.log.Timber
 
 class NotifyBabyEventUseCase(
     private val notificationSender: FirebaseNotificationSender,

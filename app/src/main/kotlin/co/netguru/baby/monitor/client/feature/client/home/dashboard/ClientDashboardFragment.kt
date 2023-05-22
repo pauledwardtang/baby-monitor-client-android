@@ -18,8 +18,8 @@ import co.netguru.baby.monitor.client.feature.client.home.ClientHomeViewModel
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_client_dashboard.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_client_dashboard.*
 
 class ClientDashboardFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_client_dashboard

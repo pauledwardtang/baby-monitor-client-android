@@ -6,9 +6,9 @@ import co.netguru.baby.monitor.client.feature.analytics.Event
 import co.netguru.baby.monitor.client.feature.analytics.EventType
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 class SnoozeNotificationUseCase @Inject constructor(
     private val dataRepository: DataRepository,

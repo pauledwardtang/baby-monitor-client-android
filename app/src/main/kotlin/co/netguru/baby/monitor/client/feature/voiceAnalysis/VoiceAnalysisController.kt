@@ -16,8 +16,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class VoiceAnalysisController @Inject constructor(
     private val notifyBabyEventUseCase: NotifyBabyEventUseCase,
@@ -51,7 +51,9 @@ class VoiceAnalysisController @Inject constructor(
                 onSuccess = {
                     voiceAnalysisOption = it.voiceAnalysisOption
                     noiseLevel = it.noiseLevel
-                    analyticsManager.setUserProperty(UserProperty.VoiceAnalysis(voiceAnalysisOption))
+                    analyticsManager.setUserProperty(
+                        UserProperty.VoiceAnalysis(voiceAnalysisOption),
+                    )
                     startRecording()
                 },
                 onComplete = this::startRecording,

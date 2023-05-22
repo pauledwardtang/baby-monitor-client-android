@@ -23,9 +23,9 @@ import co.netguru.baby.monitor.client.feature.communication.nsd.ResolveFailedExc
 import co.netguru.baby.monitor.client.feature.communication.nsd.StartDiscoveryFailedException
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_connecting_devices.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_connecting_devices.*
 
 class ServiceDiscoveryFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_connecting_devices

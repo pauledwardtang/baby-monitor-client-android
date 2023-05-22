@@ -13,10 +13,10 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import java.net.InetAddress
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.net.InetAddress
 
 class NsdServiceManagerTest {
 

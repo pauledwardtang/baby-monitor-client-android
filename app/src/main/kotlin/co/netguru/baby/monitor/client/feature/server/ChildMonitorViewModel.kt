@@ -9,8 +9,8 @@ import co.netguru.baby.monitor.client.feature.batterylevel.NotifyLowBatteryUseCa
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class ChildMonitorViewModel @Inject constructor(
     private val notifyLowBatteryUseCase: NotifyLowBatteryUseCase,

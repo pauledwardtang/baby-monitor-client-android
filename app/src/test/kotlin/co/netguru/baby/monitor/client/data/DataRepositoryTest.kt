@@ -15,9 +15,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import java.util.Locale
 import org.junit.Rule
 import org.junit.Test
-import java.util.Locale
 
 class DataRepositoryTest {
 
@@ -82,7 +82,9 @@ class DataRepositoryTest {
             .assertComplete()
         verify(analyticsManager).setUserProperty(
             argThat {
-                this is UserProperty.AppStateProperty && this.value == configuration.name.lowercase(Locale.getDefault())
+                this is UserProperty.AppStateProperty && this.value == configuration.name.lowercase(
+                    Locale.getDefault(),
+                )
             },
         )
     }
@@ -97,7 +99,9 @@ class DataRepositoryTest {
 
         verify(analyticsManager).setUserProperty(
             argThat {
-                this is UserProperty.VoiceAnalysis && this.value == voiceAnalysis.name.lowercase(Locale.getDefault())
+                this is UserProperty.VoiceAnalysis && this.value == voiceAnalysis.name.lowercase(
+                    Locale.getDefault(),
+                )
             },
         )
     }

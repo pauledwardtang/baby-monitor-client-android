@@ -2,8 +2,8 @@ package co.netguru.baby.monitor.client.feature.batterylevel
 
 import co.netguru.baby.monitor.client.feature.firebasenotification.FirebaseNotificationSender
 import co.netguru.baby.monitor.client.feature.firebasenotification.NotificationType
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class NotifyLowBatteryUseCase @Inject constructor(
     private val notificationSender: FirebaseNotificationSender,

@@ -9,7 +9,9 @@ class RestartAppUseCase @Inject constructor() {
 
     fun restartApp(activity: AppCompatActivity): Completable = Completable.fromAction {
         val intent =
-            activity.baseContext.packageManager.getLaunchIntentForPackage(activity.baseContext.packageName)
+            activity.baseContext.packageManager.getLaunchIntentForPackage(
+                activity.baseContext.packageName,
+            )
                 ?.apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

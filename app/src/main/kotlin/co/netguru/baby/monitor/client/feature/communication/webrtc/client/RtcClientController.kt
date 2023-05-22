@@ -9,9 +9,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.net.URI
 import javax.inject.Inject
+import timber.log.Timber
 
 class RtcClientController @Inject constructor(
     private val messageParser: MessageParser,

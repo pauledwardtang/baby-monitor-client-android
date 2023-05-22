@@ -11,8 +11,8 @@ import co.netguru.baby.monitor.client.common.view.StickyHeaderDecorator
 import co.netguru.baby.monitor.client.data.client.home.ToolbarState
 import co.netguru.baby.monitor.client.feature.analytics.Screen
 import co.netguru.baby.monitor.client.feature.client.home.ClientHomeViewModel
-import kotlinx.android.synthetic.main.fragment_client_activity_log.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_client_activity_log.*
 
 class ClientActivityLogFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_client_activity_log

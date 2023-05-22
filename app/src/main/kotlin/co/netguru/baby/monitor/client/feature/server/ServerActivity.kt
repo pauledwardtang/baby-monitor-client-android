@@ -21,9 +21,9 @@ import co.netguru.baby.monitor.client.feature.settings.ChangeState
 import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_server.*
 import timber.log.Timber
-import javax.inject.Inject
 
 class ServerActivity :
     DaggerAppCompatActivity(),

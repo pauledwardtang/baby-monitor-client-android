@@ -9,8 +9,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Test
 import java.net.URI
+import org.junit.Test
 
 class ClientLiveCameraFragmentViewModelTest {
 

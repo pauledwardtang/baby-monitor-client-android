@@ -12,8 +12,8 @@ import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageController
 import co.netguru.baby.monitor.client.feature.server.ServerViewModel
-import kotlinx.android.synthetic.main.fragment_server_settings.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_server_settings.*
 
 class ServerSettingsFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_server_settings

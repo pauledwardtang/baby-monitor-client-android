@@ -2,11 +2,11 @@ package co.netguru.baby.monitor.client.feature.noisedetection
 
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.AacRecorder.Companion.SAMPLING_RATE
 import io.reactivex.Single
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import timber.log.Timber
 
 class NoiseDetector @Inject constructor() {
     fun processData(data: ShortArray) = Single.fromCallable<Int> {

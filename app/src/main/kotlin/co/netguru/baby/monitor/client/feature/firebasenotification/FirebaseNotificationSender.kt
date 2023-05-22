@@ -8,6 +8,8 @@ import co.netguru.baby.monitor.client.feature.debug.DebugModule
 import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
+import java.util.Locale
+import javax.inject.Inject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -15,8 +17,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
 import timber.log.Timber
-import java.util.Locale
-import javax.inject.Inject
 
 class FirebaseNotificationSender @Inject constructor(
     private val dataRepository: DataRepository,
@@ -100,7 +100,10 @@ class FirebaseNotificationSender @Inject constructor(
                     .post(
                         gson.toJson(
                             if (isAndroid) {
-                                Message(firebaseToken, data = Data(title, text, notificationType.name))
+                                Message(
+                                    firebaseToken,
+                                    data = Data(title, text, notificationType.name),
+                                )
                             } else {
                                 Message(firebaseToken, notification = Notification(title, text))
                             },

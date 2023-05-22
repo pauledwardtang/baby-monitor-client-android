@@ -145,7 +145,9 @@ class ClientHomeViewModelTest {
     fun `should check internet connection status`() {
         val internetConnectionObserver: Observer<Boolean> = mock()
         whenever(checkInternetConnectionUseCase.hasInternetConnection()).doReturn(Single.just(true))
-        clientHomeViewModel.internetConnectionAvailability.observeForever(internetConnectionObserver)
+        clientHomeViewModel.internetConnectionAvailability.observeForever(
+            internetConnectionObserver,
+        )
 
         clientHomeViewModel.checkInternetConnection()
 

@@ -29,11 +29,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_client_settings.*
-import pl.aprilapps.easyphotopicker.EasyImage
 import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_client_settings.*
+import pl.aprilapps.easyphotopicker.EasyImage
 
 class ClientSettingsFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_client_settings

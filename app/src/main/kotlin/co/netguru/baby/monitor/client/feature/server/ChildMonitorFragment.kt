@@ -30,9 +30,9 @@ import co.netguru.baby.monitor.client.feature.communication.webrtc.server.WebRtc
 import co.netguru.baby.monitor.client.feature.debug.DebugModule
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisService
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisService.VoiceAnalysisBinder
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.fragment_child_monitor.*
 import timber.log.Timber
-import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class ChildMonitorFragment : BaseFragment(), ServiceConnection {
@@ -288,7 +288,11 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
         serverViewModel.nsdState.observe(
             viewLifecycleOwner,
             Observer {
-                if (it is NsdState.Error) showSnackbarMessage(R.string.nsd_service_registration_failed)
+                if (it is NsdState.Error) {
+                    showSnackbarMessage(
+                        R.string.nsd_service_registration_failed,
+                    )
+                }
             },
         )
     }
