@@ -45,8 +45,9 @@ class VoiceAnalysisControllerTest {
     private val machineLearning = mock<MachineLearning>()
     private val analyticsManager = mock<AnalyticsManager>()
     private val recordingDataSubjectMock = PublishSubject.create<RecordingData>()
-    private val recordingController = mock<RecordingController>
-        { on { startRecording() } doReturn recordingDataSubjectMock }
+    private val recordingController = mock<RecordingController> {
+        on { startRecording() } doReturn recordingDataSubjectMock
+    }
     private val noiseRecordingData = RecordingData.NoiseDetection(ShortArray(1))
     private val machineLearningRecordingData =
         RecordingData.MachineLearning(ByteArray(1), ShortArray(1))

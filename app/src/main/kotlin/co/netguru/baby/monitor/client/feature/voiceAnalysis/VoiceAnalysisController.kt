@@ -34,8 +34,7 @@ class VoiceAnalysisController @Inject constructor(
     private val disposables = CompositeDisposable()
     private var recordingDisposable: Disposable? = null
     private var voiceAnalysisService: VoiceAnalysisService? = null
-    var voiceAnalysisOption =
-        VoiceAnalysisOption.MACHINE_LEARNING
+    var voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING
         set(value) {
             field = value
             recordingController.voiceAnalysisOption = value
