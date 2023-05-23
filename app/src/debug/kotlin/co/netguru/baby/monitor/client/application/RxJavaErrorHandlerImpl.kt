@@ -13,5 +13,4 @@ class RxJavaErrorHandlerImpl : RxJavaErrorHandler() {
         undeliverableException.printStackTrace()
         uncaught(undeliverableException)
     }
-
 }

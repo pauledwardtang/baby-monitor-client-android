@@ -6,13 +6,18 @@ import co.netguru.baby.monitor.client.feature.communication.ConfirmationItem
 import co.netguru.baby.monitor.client.feature.communication.ConfirmationUseCase
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageController
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
-import org.junit.Test
 import java.util.concurrent.TimeUnit
+import org.junit.Test
 
 class ConfirmationUseCaseTest {
 
@@ -40,79 +45,104 @@ class ConfirmationUseCaseTest {
     @Test
     fun `should send noiseDetection message to baby device`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = confirmationId,
-            voiceAnalysisOption = VoiceAnalysisOption.NOISE_DETECTION.name))
+            Message(
+                confirmationId = confirmationId,
+                voiceAnalysisOption = VoiceAnalysisOption.NOISE_DETECTION.name,
+            ),
+        )
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertComplete()
 
         verify(messageController)
-            .sendMessage(argThat { voiceAnalysisOption == VoiceAnalysisOption.NOISE_DETECTION.name })
+            .sendMessage(
+                argThat { voiceAnalysisOption == VoiceAnalysisOption.NOISE_DETECTION.name },
+            )
     }
 
     @Test
     fun `should send machineLearning message to baby device`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = confirmationId,
-                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name))
+            Message(
+                confirmationId = confirmationId,
+                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name,
+            ),
+        )
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertComplete()
 
-        verify(messageController).sendMessage(argThat { voiceAnalysisOption ==
-                VoiceAnalysisOption.MACHINE_LEARNING.name })
+        verify(messageController).sendMessage(
+            argThat {
+                voiceAnalysisOption ==
+                    VoiceAnalysisOption.MACHINE_LEARNING.name
+            },
+        )
     }
 
     @Test
     fun `should get successful response with the same confirmationId`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = confirmationId,
-                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name))
+            Message(
+                confirmationId = confirmationId,
+                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name,
+            ),
+        )
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertValue(true)
 
-        verify(messageController).sendMessage(argThat {
-            voiceAnalysisOption ==
+        verify(messageController).sendMessage(
+            argThat {
+                voiceAnalysisOption ==
                     VoiceAnalysisOption.MACHINE_LEARNING.name
-        })
+            },
+        )
     }
 
     @Test
     fun `should get failure response after timeout if correct confirmationId isn't returned`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = "wrongId",
-                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name))
+            Message(
+                confirmationId = "wrongId",
+                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name,
+            ),
+        )
 
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertValue(false)
 
         timerTestScheduler.advanceTimeBy(5, TimeUnit.SECONDS)
 
-        verify(messageController).sendMessage(argThat {
-            voiceAnalysisOption ==
+        verify(messageController).sendMessage(
+            argThat {
+                voiceAnalysisOption ==
                     VoiceAnalysisOption.MACHINE_LEARNING.name
-        })
+            },
+        )
     }
 
     @Test
     fun `should invoke succes action with data repository`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = confirmationId,
-                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name))
+            Message(
+                confirmationId = confirmationId,
+                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name,
+            ),
+        )
 
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertValue(true)
 
@@ -122,12 +152,15 @@ class ConfirmationUseCaseTest {
     @Test
     fun `shouldn't save option change to database when change failed`() {
         whenever(confirmationItem.sentMessage).doReturn(
-            Message(confirmationId = "wrongId",
-                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name))
+            Message(
+                confirmationId = "wrongId",
+                voiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING.name,
+            ),
+        )
 
         confirmationUseCase.changeValue(
             messageController,
-            confirmationItem
+            confirmationItem,
         ).test()
             .assertValue(false)
 

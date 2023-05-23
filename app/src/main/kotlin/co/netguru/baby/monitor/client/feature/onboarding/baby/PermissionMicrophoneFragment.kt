@@ -16,14 +16,18 @@ class PermissionMicrophoneFragment : BaseFragment() {
         requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         findNavController().navigate(
-                if (requireContext().allPermissionsGranted(Companion.permissions)) {
-                    R.id.permissionMicrophoneToSetupInformation
-                } else {
-                    R.id.permissionMicrophoneToPermissionDenied
-                }
+            if (requireContext().allPermissionsGranted(Companion.permissions)) {
+                R.id.permissionMicrophoneToSetupInformation
+            } else {
+                R.id.permissionMicrophoneToPermissionDenied
+            },
         )
     }
 
@@ -31,7 +35,7 @@ class PermissionMicrophoneFragment : BaseFragment() {
         private const val PERMISSIONS_REQUEST_CODE = 126
 
         private val permissions = arrayOf(
-                Manifest.permission.RECORD_AUDIO
+            Manifest.permission.RECORD_AUDIO,
         )
     }
 }

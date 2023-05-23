@@ -9,12 +9,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.net.URI
 import javax.inject.Inject
+import timber.log.Timber
 
 class RtcClientController @Inject constructor(
-    private val messageParser: MessageParser
+    private val messageParser: MessageParser,
 ) {
     private var rtcClient: RtcClient? = null
     private val compositeDisposable = CompositeDisposable()
@@ -25,20 +25,20 @@ class RtcClientController @Inject constructor(
         serverUri: URI,
         client: RxWebSocketClient,
         streamStateListener: (streamState: StreamState) -> Unit,
-        hasRecordAudioPermission: Boolean
+        hasRecordAudioPermission: Boolean,
     ) {
         rtcClient = RtcClient(
             RtcClientMessageController(
                 messageParser,
                 serverUri,
-                client
+                client,
             ),
             streamStateListener,
-            liveCameraRemoteRenderer
+            liveCameraRemoteRenderer,
         ).apply {
             startCall(
                 context,
-                hasRecordAudioPermission
+                hasRecordAudioPermission,
             )
                 .subscribeOn(Schedulers.newThread())
                 .subscribeBy(
@@ -48,7 +48,7 @@ class RtcClientController @Inject constructor(
                     onError = {
                         endCall()
                         Timber.e(it, "Error during startCall")
-                    }
+                    },
                 ).addTo(compositeDisposable)
         }
     }

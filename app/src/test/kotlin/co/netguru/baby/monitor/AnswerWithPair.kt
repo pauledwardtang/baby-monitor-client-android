@@ -6,7 +6,7 @@ import org.mockito.stubbing.Answer
 
 class AnswerWithPair<T : Any>(
     private val clazz: Class<*>,
-    private val pair: Pair<Class<T>, T>
+    private val pair: Pair<Class<T>, T>,
 ) : Answer<Any> {
     private val delegate = ReturnsEmptyValues()
 

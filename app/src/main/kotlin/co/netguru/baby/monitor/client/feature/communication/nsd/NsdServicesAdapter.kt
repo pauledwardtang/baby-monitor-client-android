@@ -13,7 +13,7 @@ class NsdServicesAdapter(private val onServiceClick: (nsdServiceInfo: NsdService
         val view = View.inflate(parent.context, R.layout.found_service_item, null)
         val layoutParams = RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            view.resources.getDimension(R.dimen.nsd_service_item_height).toInt()
+            view.resources.getDimension(R.dimen.nsd_service_item_height).toInt(),
         )
         view.layoutParams = layoutParams
         return ServiceViewHolder(view)

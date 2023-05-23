@@ -7,12 +7,11 @@ import io.reactivex.Completable
 import javax.inject.Inject
 
 class SendFirebaseTokenUseCase @Inject constructor(
-    private val firebaseInstanceManager: FirebaseInstanceManager
+    private val firebaseInstanceManager: FirebaseInstanceManager,
 ) {
 
-    fun sendFirebaseToken(client: RxWebSocketClient): Completable =
-        firebaseInstanceManager.getFirebaseToken()
-            .flatMapCompletable { token ->
-                   client.send(Message(pushNotificationsToken = token))
-            }
+    fun sendFirebaseToken(client: RxWebSocketClient): Completable = firebaseInstanceManager.getFirebaseToken()
+        .flatMapCompletable { token ->
+            client.send(Message(pushNotificationsToken = token))
+        }
 }

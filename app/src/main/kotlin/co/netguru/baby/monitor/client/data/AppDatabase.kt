@@ -14,10 +14,10 @@ import co.netguru.baby.monitor.client.data.communication.ClientEntity
     entities = [
         LogDataEntity::class,
         ClientEntity::class,
-        ChildDataEntity::class
+        ChildDataEntity::class,
     ],
     version = 5,
-    exportSchema = false
+    exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

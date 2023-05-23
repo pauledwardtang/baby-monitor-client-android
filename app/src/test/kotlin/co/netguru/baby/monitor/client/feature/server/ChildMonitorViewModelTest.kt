@@ -6,7 +6,10 @@ import co.netguru.baby.monitor.RxSchedulersOverrideRule
 import co.netguru.baby.monitor.client.feature.analytics.AnalyticsManager
 import co.netguru.baby.monitor.client.feature.analytics.Event
 import co.netguru.baby.monitor.client.feature.batterylevel.NotifyLowBatteryUseCase
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
@@ -31,8 +34,8 @@ class ChildMonitorViewModelTest {
         whenever(
             notifyLowBatteryUseCase.notifyLowBattery(
                 title,
-                text
-            )
+                text,
+            ),
         ).doReturn(Completable.complete())
 
         childViewModel.notifyLowBattery(title, text)

@@ -10,12 +10,12 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import org.java_websocket.WebSocket
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class WebSocketServerHandler(
-    private val handleMessage: (WebSocket?, String?) -> Unit
+    private val handleMessage: (WebSocket?, String?) -> Unit,
 ) {
 
     private val publishSubjectClientConnectionStatus =
@@ -30,8 +30,9 @@ class WebSocketServerHandler(
         if (server != null) return
 
         compositeDisposable.clear()
-        server = CustomWebSocketServer(SERVER_PORT,
-            onMessageReceived = { webSocket, message -> handleMessage(webSocket, message) }
+        server = CustomWebSocketServer(
+            SERVER_PORT,
+            onMessageReceived = { webSocket, message -> handleMessage(webSocket, message) },
         ).apply {
             startServer().subscribeOn(Schedulers.io())
                 .subscribeBy(
@@ -41,7 +42,7 @@ class WebSocketServerHandler(
                     onError = { e ->
                         restartServer()
                         Timber.e("launch failed $e")
-                    }
+                    },
                 ).addTo(compositeDisposable)
             connectedClients()
                 .subscribeOn(Schedulers.io())
@@ -54,9 +55,11 @@ class WebSocketServerHandler(
                     }
                     publishSubjectClientConnectionStatus.onNext(status)
                 }
-                .subscribeBy(onError = {
-                    Timber.e(it)
-                })
+                .subscribeBy(
+                    onError = {
+                        Timber.e(it)
+                    },
+                )
                 .addTo(compositeDisposable)
         }
     }
@@ -72,7 +75,7 @@ class WebSocketServerHandler(
                 onError = { e ->
                     Timber.e(e)
                     restartServer()
-                }
+                },
             ).addTo(compositeDisposable)
     }
 
@@ -99,7 +102,7 @@ class WebSocketServerHandler(
                 onError = {
                     Timber.e("stop failed $it")
                     stopServer(shouldRestart)
-                }
+                },
             ).addTo(compositeDisposable)
     }
 

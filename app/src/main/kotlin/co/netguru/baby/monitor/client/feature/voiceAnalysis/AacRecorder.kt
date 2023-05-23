@@ -4,8 +4,8 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import io.reactivex.Observable
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class AacRecorder @Inject constructor() {
 
@@ -18,7 +18,7 @@ class AacRecorder @Inject constructor() {
             SAMPLING_RATE,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize
+            bufferSize,
         )
         Timber.i("recording started")
         val buffer = ByteArray(bufferSize)
@@ -41,7 +41,7 @@ class AacRecorder @Inject constructor() {
         var bufferSize = AudioRecord.getMinBufferSize(
             SAMPLING_RATE,
             AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
+            AudioFormat.ENCODING_PCM_16BIT,
         ) * 2
         if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
             bufferSize = SAMPLING_RATE * 2

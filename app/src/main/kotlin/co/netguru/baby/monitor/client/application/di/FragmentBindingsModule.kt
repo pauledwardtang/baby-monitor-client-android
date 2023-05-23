@@ -9,16 +9,20 @@ import co.netguru.baby.monitor.client.feature.client.home.log.ClientActivityLogF
 import co.netguru.baby.monitor.client.feature.communication.pairing.ConnectingDevicesFailedFragment
 import co.netguru.baby.monitor.client.feature.communication.pairing.PairingFragment
 import co.netguru.baby.monitor.client.feature.communication.pairing.ServiceDiscoveryFragment
-import co.netguru.baby.monitor.client.feature.onboarding.VoiceRecordingsSettingsFragment
 import co.netguru.baby.monitor.client.feature.onboarding.FeaturePresentationFragment
 import co.netguru.baby.monitor.client.feature.onboarding.InfoAboutDevicesFragment
-import co.netguru.baby.monitor.client.feature.onboarding.baby.*
+import co.netguru.baby.monitor.client.feature.onboarding.SpecifyDeviceFragment
+import co.netguru.baby.monitor.client.feature.onboarding.VoiceRecordingsSettingsFragment
+import co.netguru.baby.monitor.client.feature.onboarding.baby.ConnectWifiFragment
+import co.netguru.baby.monitor.client.feature.onboarding.baby.PermissionCameraFragment
+import co.netguru.baby.monitor.client.feature.onboarding.baby.PermissionDenied
+import co.netguru.baby.monitor.client.feature.onboarding.baby.PermissionMicrophoneFragment
+import co.netguru.baby.monitor.client.feature.onboarding.baby.SetupInformationFragment
 import co.netguru.baby.monitor.client.feature.server.ChildMonitorFragment
 import co.netguru.baby.monitor.client.feature.server.ChildMonitorFragmentModule
 import co.netguru.baby.monitor.client.feature.settings.ClientSettingsFragment
 import co.netguru.baby.monitor.client.feature.settings.ServerSettingsFragment
 import co.netguru.baby.monitor.client.feature.splash.SplashFragment
-import co.netguru.baby.monitor.client.feature.onboarding.SpecifyDeviceFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -6,7 +6,11 @@ import co.netguru.baby.monitor.client.feature.analytics.AnalyticsManager
 import co.netguru.baby.monitor.client.feature.analytics.Event
 import co.netguru.baby.monitor.client.feature.analytics.EventType
 import co.netguru.baby.monitor.client.feature.babynotification.SnoozeNotificationUseCase
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +27,7 @@ class SnoozeNotificationUseCaseTest {
     private val snoozeNotificationUseCase =
         SnoozeNotificationUseCase(
             dataRepository,
-            analyticsManager
+            analyticsManager,
         )
 
     @Test
@@ -37,8 +41,10 @@ class SnoozeNotificationUseCaseTest {
     fun `should send snoozeNotification event to firebase`() {
         snoozeNotificationUseCase.snoozeNotifications()
 
-        verify(analyticsManager).logEvent(check {
-            it is Event.Simple && it.eventType == EventType.NOTIFICATION_SNOOZE
-        })
+        verify(analyticsManager).logEvent(
+            check {
+                it is Event.Simple && it.eventType == EventType.NOTIFICATION_SNOOZE
+            },
+        )
     }
 }

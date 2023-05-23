@@ -16,12 +16,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.io.File
+import timber.log.Timber
 
 class FirebaseRepository(
     private val preferencesWrapper: FirebaseSharedPreferencesWrapper,
-    private val context: Context
+    private val context: Context,
 ) {
     private var storageRef: StorageReference? = null
     private val directory = context.getDir(WavFileGenerator.DIRECTORY_NAME, Context.MODE_PRIVATE)
@@ -46,7 +46,7 @@ class FirebaseRepository(
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onComplete = { uploadAllRecordingsToFirebaseStorage() },
-                    onError = Timber::e
+                    onError = Timber::e,
                 )
                 .addTo(compositeDisposable)
         }?.addOnProgressListener { taskSnapshot ->
@@ -73,14 +73,17 @@ class FirebaseRepository(
 
         if (storageRef == null) {
             val storage =
-                FirebaseStorage.getInstance(GOOGLE_STORAGE + context.getString(R.string.google_storage_bucket))
+                FirebaseStorage.getInstance(
+                    GOOGLE_STORAGE + context.getString(R.string.google_storage_bucket),
+                )
             storageRef = storage.reference
         }
         addListeners(
             storageRef?.putFile(
                 preferencesWrapper.getFileUri(),
-                StorageMetadata.Builder().build(), preferencesWrapper.getSessionUri()
-            )
+                StorageMetadata.Builder().build(),
+                preferencesWrapper.getSessionUri(),
+            ),
         )
     }
 
@@ -88,7 +91,9 @@ class FirebaseRepository(
     internal fun uploadFirstRecording(): UploadTask? {
         val file = directory?.listFiles()?.firstOrNull() ?: return null
         val storage =
-            FirebaseStorage.getInstance(GOOGLE_STORAGE + context.getString(R.string.google_storage_bucket))
+            FirebaseStorage.getInstance(
+                GOOGLE_STORAGE + context.getString(R.string.google_storage_bucket),
+            )
         storageRef = storage.reference
         val fileUri = Uri.fromFile(file)
         val lastPathSegment = fileUri.lastPathSegment

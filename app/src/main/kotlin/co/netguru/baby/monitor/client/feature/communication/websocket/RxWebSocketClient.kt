@@ -7,16 +7,16 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import org.java_websocket.client.WebSocketClient
-import org.java_websocket.handshake.ServerHandshake
-import timber.log.Timber
 import java.net.URI
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import org.java_websocket.client.WebSocketClient
+import org.java_websocket.handshake.ServerHandshake
+import timber.log.Timber
 
 @Reusable
 class RxWebSocketClient @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
 ) {
 
     private var client: RxWebSocketClient? = null

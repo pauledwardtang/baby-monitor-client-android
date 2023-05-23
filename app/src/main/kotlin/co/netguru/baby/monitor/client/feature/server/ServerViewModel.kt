@@ -1,6 +1,10 @@
 package co.netguru.baby.monitor.client.feature.server
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import co.netguru.baby.monitor.client.common.ISchedulersProvider
 import co.netguru.baby.monitor.client.common.SingleLiveEvent
 import co.netguru.baby.monitor.client.data.DataRepository
@@ -20,20 +24,20 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 class ServerViewModel @Inject constructor(
     private val nsdServiceManager: NsdServiceManager,
     private val dataRepository: DataRepository,
     private val receiveFirebaseTokenUseCase: Lazy<ReceiveFirebaseTokenUseCase>,
-    private val schedulersProvider: ISchedulersProvider
+    private val schedulersProvider: ISchedulersProvider,
 ) : ViewModel() {
 
     private val mutableShouldDrawerBeOpen = MutableLiveData<Boolean>()
     internal val shouldDrawerBeOpen: LiveData<Boolean> = mutableShouldDrawerBeOpen
-    private val mutableTimer = MutableLiveData<Long>()
+    private val mutableTimer = MutableLiveData<Long?>()
     private var timerDisposable: Disposable? = null
     private val compositeDisposable = CompositeDisposable()
 
@@ -41,8 +45,8 @@ class ServerViewModel @Inject constructor(
     private val mutableCameraState = MutableLiveData(
         CameraState(
             previewEnabled = true,
-            streamingEnabled = false
-        )
+            streamingEnabled = false,
+        ),
     )
     internal val nsdState = nsdServiceManager.nsdStateLiveData
     internal val cameraState: LiveData<CameraState> = mutableCameraState
@@ -69,14 +73,17 @@ class ServerViewModel @Inject constructor(
     internal val previewingVideo = Transformations.map(cameraState) { it.previewEnabled }
         .distinctUntilChanged()
 
-    internal val timer: LiveData<Long> =
-        mutableTimer
+    internal val timer: LiveData<Long?> = mutableTimer
 
     internal fun resetTimer() {
         timerDisposable?.dispose()
         timerDisposable = Observable.intervalRange(
-            1, VIDEO_PREVIEW_TOTAL_TIME, 0, 1, TimeUnit.SECONDS,
-            schedulersProvider.io()
+            1,
+            VIDEO_PREVIEW_TOTAL_TIME,
+            0,
+            1,
+            TimeUnit.SECONDS,
+            schedulersProvider.io(),
         )
             .observeOn(schedulersProvider.mainThread())
             .subscribeBy(
@@ -87,7 +94,7 @@ class ServerViewModel @Inject constructor(
                 onComplete = {
                     mutableTimer.value = null
                     toggleVideoPreview(false)
-                }
+                },
             )
     }
 
@@ -104,7 +111,7 @@ class ServerViewModel @Inject constructor(
             .subscribeOn(schedulersProvider.io())
             .subscribeBy(
                 onComplete = { Timber.i("state saved") },
-                onError = Timber::e
+                onError = Timber::e,
             ).addTo(compositeDisposable)
     }
 
@@ -119,7 +126,7 @@ class ServerViewModel @Inject constructor(
                 onNext = { connectionStatus ->
                     mutablePulsatingViewStatus.value = connectionStatus
                 },
-                onError = { Timber.e(it) }
+                onError = { Timber.e(it) },
             )
 
         compositeDisposable += binder.messages()
@@ -150,11 +157,11 @@ class ServerViewModel @Inject constructor(
     private fun handleNoiseLevelChange(
         level: Int,
         confirmationId: String?,
-        binder: WebSocketServerService.Binder
+        binder: WebSocketServerService.Binder,
     ) {
         mutableNoiseLevel.value = level
         compositeDisposable += dataRepository.updateNoiseLevel(
-            level
+            level,
         ).subscribeOn(schedulersProvider.io())
             .subscribe { binder.sendMessage(Message(confirmationId = confirmationId)) }
     }
@@ -162,20 +169,21 @@ class ServerViewModel @Inject constructor(
     private fun handleVoiceAnalysisOptionChange(
         voiceAnalysisOption: String,
         confirmationId: String?,
-        binder: WebSocketServerService.Binder
+        binder: WebSocketServerService.Binder,
     ) {
         when (voiceAnalysisOption) {
             VoiceAnalysisOption.NOISE_DETECTION.name -> {
                 mutableVoiceAnalysisOptionLiveData.value = VoiceAnalysisOption.NOISE_DETECTION
             }
+
             VoiceAnalysisOption.MACHINE_LEARNING.name -> {
                 mutableVoiceAnalysisOptionLiveData.value = VoiceAnalysisOption.MACHINE_LEARNING
             }
         }
         compositeDisposable += dataRepository.updateVoiceAnalysisOption(
             VoiceAnalysisOption.valueOf(
-                voiceAnalysisOption
-            )
+                voiceAnalysisOption,
+            ),
         ).subscribeOn(schedulersProvider.io())
             .subscribe { binder.sendMessage(Message(confirmationId = confirmationId)) }
     }
@@ -187,16 +195,16 @@ class ServerViewModel @Inject constructor(
     fun approvePairingCode(binder: WebSocketServerService.Binder) {
         binder.sendMessage(
             Message(
-                pairingApproved = true
-            )
+                pairingApproved = true,
+            ),
         )
     }
 
     fun disapprovePairingCode(binder: WebSocketServerService.Binder) {
         binder.sendMessage(
             Message(
-                pairingApproved = false
-            )
+                pairingApproved = false,
+            ),
         )
         mutablePairingCodeLiveData.value = ""
     }
@@ -212,7 +220,7 @@ class ServerViewModel @Inject constructor(
                 onError = {
                     mutableRtcConnectionStatus.postValue(RtcConnectionState.Error)
                     Timber.e(it)
-                }
+                },
             )
     }
 
@@ -232,7 +240,7 @@ class ServerViewModel @Inject constructor(
 
     private fun handleCameraState(
         previewEnabled: Boolean = mutableCameraState.value?.previewEnabled == true,
-        streamingEnabled: Boolean = mutableCameraState.value?.streamingEnabled == true
+        streamingEnabled: Boolean = mutableCameraState.value?.streamingEnabled == true,
     ) {
         mutableCameraState.postValue(CameraState(previewEnabled, streamingEnabled))
     }
@@ -254,7 +262,7 @@ class ServerViewModel @Inject constructor(
                 },
                 onError = { error ->
                     Timber.w(error, "Couldn't save Firebase token.")
-                }
+                },
             )
     }
 

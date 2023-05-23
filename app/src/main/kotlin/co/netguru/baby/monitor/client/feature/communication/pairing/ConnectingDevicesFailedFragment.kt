@@ -22,11 +22,14 @@ class ConnectingDevicesFailedFragment : BaseFragment() {
     }
 
     private fun setupOnBackPressedHandling() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.connectionFailedToServiceDiscovery)
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object :
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigate(R.id.connectionFailedToServiceDiscovery)
+                }
+            },
+        )
     }
 }

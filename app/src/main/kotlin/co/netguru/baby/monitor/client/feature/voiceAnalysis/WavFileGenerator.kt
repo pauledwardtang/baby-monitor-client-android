@@ -2,12 +2,12 @@ package co.netguru.baby.monitor.client.feature.voiceAnalysis
 
 import android.content.Context
 import io.reactivex.Single
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import timber.log.Timber
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 
 @Suppress("MagicNumber")
 object WavFileGenerator {
@@ -34,23 +34,25 @@ object WavFileGenerator {
         rawData: ByteArray,
         bitsPerSample: Int,
         channels: Int,
-        sampleRate: Int
+        sampleRate: Int,
     ) = Single.fromCallable {
         checkAvailableSpace(
-            context
+            context,
         )
         val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
         val file = File(
             context.getDir(DIRECTORY_NAME, Context.MODE_PRIVATE),
-            "crying_${LocalDateTime.now().format(formatter)}.wav"
+            "crying_${LocalDateTime.now().format(formatter)}.wav",
         )
 
         file.outputStream().use { stream ->
             stream.write(
                 getHeader(
-                    rawData, bitsPerSample,
-                    channels, sampleRate
-                )
+                    rawData,
+                    bitsPerSample,
+                    channels,
+                    sampleRate,
+                ),
             )
             stream.write(rawData)
         }
@@ -61,12 +63,12 @@ object WavFileGenerator {
     private fun getByteRate(
         bitsPerSample: Int,
         channels: Int,
-        sampleRate: Int
+        sampleRate: Int,
     ) = bitsPerSample * sampleRate * channels / BITS_PER_BYTE
 
     private fun getBlockAlign(
         channels: Int,
-        bitsPerSample: Int
+        bitsPerSample: Int,
     ): Short = (channels * bitsPerSample / BITS_PER_BYTE).toShort()
 
     /**
@@ -78,7 +80,7 @@ object WavFileGenerator {
         rawData: ByteArray,
         bitsPerSample: Int,
         channels: Int,
-        sampleRate: Int
+        sampleRate: Int,
     ): ByteArray {
         return ByteBuffer
             .allocate(HEADER_SIZE)
@@ -117,7 +119,7 @@ object WavFileGenerator {
                 .sortedBy { file -> file.lastModified() }
                 .firstOrNull()?.delete()
             checkAvailableSpace(
-                context
+                context,
             )
         }
     }

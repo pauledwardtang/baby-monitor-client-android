@@ -2,19 +2,44 @@ package co.netguru.baby.monitor.client.feature.communication.webrtc.server
 
 import android.content.Context
 import android.media.AudioManager
-import co.netguru.baby.monitor.client.feature.communication.webrtc.*
+import co.netguru.baby.monitor.client.feature.communication.webrtc.ConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidateAdded
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidatesChange
+import co.netguru.baby.monitor.client.feature.communication.webrtc.RtcConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.StreamState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.createAnswer
 import co.netguru.baby.monitor.client.feature.communication.webrtc.observers.ConnectionObserver
+import co.netguru.baby.monitor.client.feature.communication.webrtc.setLocalDescription
+import co.netguru.baby.monitor.client.feature.communication.webrtc.setRemoteDescription
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import org.webrtc.*
+import org.webrtc.AudioSource
+import org.webrtc.AudioTrack
+import org.webrtc.Camera2Enumerator
+import org.webrtc.CameraEnumerator
+import org.webrtc.CameraVideoCapturer
+import org.webrtc.DefaultVideoDecoderFactory
+import org.webrtc.DefaultVideoEncoderFactory
+import org.webrtc.EglBase
+import org.webrtc.IceCandidate
+import org.webrtc.MediaConstraints
+import org.webrtc.MediaStream
+import org.webrtc.PeerConnection
+import org.webrtc.PeerConnectionFactory
+import org.webrtc.SessionDescription
+import org.webrtc.SurfaceTextureHelper
+import org.webrtc.SurfaceViewRenderer
+import org.webrtc.VideoSink
+import org.webrtc.VideoSource
+import org.webrtc.VideoTrack
 import timber.log.Timber
 
 class WebRtcManager constructor(
-    private val sendMessage: (Message) -> Unit
+    private val sendMessage: (Message) -> Unit,
 ) {
 
     private lateinit var peerConnectionFactory: PeerConnectionFactory
@@ -60,7 +85,7 @@ class WebRtcManager constructor(
             videoCapturer.startCapture(
                 VIDEO_WIDTH,
                 VIDEO_HEIGHT,
-                VIDEO_FRAMERATE
+                VIDEO_FRAMERATE,
             )
         } else {
             Timber.i("disableVideo")
@@ -74,7 +99,7 @@ class WebRtcManager constructor(
         PeerConnectionFactory.initialize(
             PeerConnectionFactory.InitializationOptions.builder(context)
                 .setEnableInternalTracer(false)
-                .createInitializationOptions()
+                .createInitializationOptions(),
         )
         val encoderFactory = DefaultVideoEncoderFactory(sharedContext, true, false)
         val decoderFactory = DefaultVideoDecoderFactory(sharedContext)
@@ -110,7 +135,7 @@ class WebRtcManager constructor(
 
         peerConnection = peerConnectionFactory.createPeerConnection(
             emptyList(),
-            connectionObserver
+            connectionObserver,
         )
         listenForIceCandidates(connectionObserver.streamObservable)
     }
@@ -124,13 +149,16 @@ class WebRtcManager constructor(
         streamObservable
             .subscribeOn(Schedulers.io())
             .ofType(OnIceCandidatesChange::class.java)
-            .subscribeBy(onNext = { iceCandidateChange ->
-                if (iceCandidateChange.iceCandidateState is OnIceCandidateAdded) {
-                    handleIceCandidate(
-                        iceCandidateChange.iceCandidateState.iceCandidate
-                    )
-                }
-            }, onError = { throwable -> throwable.printStackTrace() })
+            .subscribeBy(
+                onNext = { iceCandidateChange ->
+                    if (iceCandidateChange.iceCandidateState is OnIceCandidateAdded) {
+                        handleIceCandidate(
+                            iceCandidateChange.iceCandidateState.iceCandidate,
+                        )
+                    }
+                },
+                onError = { throwable -> throwable.printStackTrace() },
+            )
             .addTo(compositeDisposable)
     }
 
@@ -140,9 +168,9 @@ class WebRtcManager constructor(
                 iceCandidate = Message.IceCandidateData(
                     iceCandidate.sdp,
                     iceCandidate.sdpMid,
-                    iceCandidate.sdpMLineIndex
-                )
-            )
+                    iceCandidate.sdpMLineIndex,
+                ),
+            ),
         )
     }
 
@@ -172,22 +200,24 @@ class WebRtcManager constructor(
                         Message(
                             sdpAnswer = Message.SdpData(
                                 sdp = answer.description,
-                                type = answer.type.canonicalForm()
-                            )
-                        )
+                                type = answer.type.canonicalForm(),
+                            ),
+                        ),
                     )
                     peerConnection?.setLocalDescription(answer)
                 }
                 .doOnComplete { Timber.d("Answer set as a local description.") }
-                .subscribeBy(onError = {
-                    connectionObserver.onSetDescriptionError()
-                    sendMessage(
-                        Message(
-                            sdpError = it.message
+                .subscribeBy(
+                    onError = {
+                        connectionObserver.onSetDescriptionError()
+                        sendMessage(
+                            Message(
+                                sdpError = it.message,
+                            ),
                         )
-                    )
-                    Timber.e(it)
-                })
+                        Timber.e(it)
+                    },
+                )
         }?.addTo(compositeDisposable)
     }
 
@@ -224,8 +254,8 @@ class WebRtcManager constructor(
             IceCandidate(
                 iceCandidateData.sdpMid,
                 iceCandidateData.sdpMLineIndex,
-                iceCandidateData.sdp
-            )
+                iceCandidateData.sdp,
+            ),
         )
     }
 
@@ -240,7 +270,9 @@ class WebRtcManager constructor(
             .doOnNext {
                 if (it.connectionState is RtcConnectionState.Disconnected ||
                     it.connectionState is RtcConnectionState.Error
-                ) disposeStream()
+                ) {
+                    disposeStream()
+                }
             }
             .flatMap { Observable.just(it.connectionState) }
 

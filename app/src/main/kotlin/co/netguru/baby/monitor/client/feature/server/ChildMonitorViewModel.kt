@@ -9,12 +9,12 @@ import co.netguru.baby.monitor.client.feature.batterylevel.NotifyLowBatteryUseCa
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class ChildMonitorViewModel @Inject constructor(
     private val notifyLowBatteryUseCase: NotifyLowBatteryUseCase,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
@@ -30,7 +30,7 @@ class ChildMonitorViewModel @Inject constructor(
                 },
                 onError = { error ->
                     Timber.w(error, "Error posting low battery notification.")
-                }
+                },
             )
     }
 

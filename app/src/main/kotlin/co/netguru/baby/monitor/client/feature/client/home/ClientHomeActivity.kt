@@ -17,19 +17,20 @@ import co.netguru.baby.monitor.client.data.client.home.ToolbarState
 import co.netguru.baby.monitor.client.feature.babynotification.SnoozeNotificationUseCase.Companion.SNOOZE_DIALOG_TAG
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message
 import co.netguru.baby.monitor.client.feature.onboarding.OnboardingActivity
-import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import co.netguru.baby.monitor.client.feature.settings.ChangeState
+import co.netguru.baby.monitor.client.feature.settings.ConfigurationViewModel
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
+import java.net.URI
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_client_home.*
 import kotlinx.android.synthetic.main.toolbar_child.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import timber.log.Timber
-import java.net.URI
-import javax.inject.Inject
 
-class ClientHomeActivity : DaggerAppCompatActivity(),
+class ClientHomeActivity :
+    DaggerAppCompatActivity(),
     YesNoDialog.YesNoDialogClickListener {
 
     @Inject
@@ -65,9 +66,12 @@ class ClientHomeActivity : DaggerAppCompatActivity(),
     }
 
     private fun setupObservers() {
-        homeViewModel.internetConnectionAvailability.observe(this, Observer { isConnected ->
-            if (!isConnected) showErrorSnackbar(R.string.no_internet_message)
-        })
+        homeViewModel.internetConnectionAvailability.observe(
+            this,
+            Observer { isConnected ->
+                if (!isConnected) showErrorSnackbar(R.string.no_internet_message)
+            },
+        )
 
         homeViewModel.selectedChildLiveData.observeNonNull(this) { child ->
             handleSelectedChild(child)
@@ -79,33 +83,46 @@ class ClientHomeActivity : DaggerAppCompatActivity(),
             Observer {
                 backIbtn.setVisible(it?.shouldBeVisible == true)
                 setBackButtonClick(it?.shouldShowSnoozeDialog == true)
-            })
+            },
+        )
 
-        homeViewModel.shouldDrawerBeOpen.observe(this, Observer { shouldClose ->
-            handleDrawerEvent(shouldClose)
-        })
+        homeViewModel.shouldDrawerBeOpen.observe(
+            this,
+            Observer { shouldClose ->
+                handleDrawerEvent(shouldClose)
+            },
+        )
 
-        homeViewModel.webSocketAction.observe(this, Observer {
-            if (it == Message.RESET_ACTION) {
-                configurationViewModel.resetApp()
-            } else {
-                Timber.d("Action not handled: $it")
-            }
-        })
-        homeViewModel.errorAction.observe(this, Observer {
-            showErrorSnackbar(R.string.default_error_message)
-        })
+        homeViewModel.webSocketAction.observe(
+            this,
+            Observer {
+                if (it == Message.RESET_ACTION) {
+                    configurationViewModel.resetApp()
+                } else {
+                    Timber.d("Action not handled: $it")
+                }
+            },
+        )
+        homeViewModel.errorAction.observe(
+            this,
+            Observer {
+                showErrorSnackbar(R.string.default_error_message)
+            },
+        )
 
-        configurationViewModel.resetState.observe(this, Observer { resetState ->
-            when (resetState) {
-                is ChangeState.Completed -> handleAppReset()
-            }
-        })
+        configurationViewModel.resetState.observe(
+            this,
+            Observer { resetState ->
+                when (resetState) {
+                    is ChangeState.Completed -> handleAppReset()
+                }
+            },
+        )
     }
 
     private fun handleAppReset() {
         startActivity(
-            Intent(this, OnboardingActivity::class.java)
+            Intent(this, OnboardingActivity::class.java),
         )
         finishAffinity()
     }
@@ -158,7 +175,7 @@ class ClientHomeActivity : DaggerAppCompatActivity(),
     private fun showSnoozeDialog() {
         YesNoDialog.newInstance(
             R.string.dialog_snooze_title,
-            getString(R.string.dialog_snooze_message)
+            getString(R.string.dialog_snooze_message),
         ).show(supportFragmentManager, SNOOZE_DIALOG_TAG)
     }
 
@@ -183,11 +200,13 @@ class ClientHomeActivity : DaggerAppCompatActivity(),
                 childToolbarLayout.setVisible(false)
                 defaultToolbarLayout.setVisible(false)
             }
+
             ToolbarState.HISTORY -> {
                 childToolbarLayout.setVisible(false)
                 defaultToolbarLayout.setVisible(true)
                 toolbarTitleTv.text = getString(R.string.latest_activity)
             }
+
             ToolbarState.DEFAULT -> {
                 defaultToolbarLayout.setVisible(false)
                 childToolbarLayout.setVisible(true)

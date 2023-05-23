@@ -16,6 +16,7 @@ class BabyEventActionIntentService : IntentService(NAME) {
 
     @Inject
     internal lateinit var snoozeNotificationUseCase: SnoozeNotificationUseCase
+
     @Inject
     internal lateinit var openCameraUseCase: OpenCameraUseCase
     private val disposables = CompositeDisposable()
@@ -29,14 +30,17 @@ class BabyEventActionIntentService : IntentService(NAME) {
         NotificationManagerCompat.from(this).cancel(CRYING_NOTIFICATION_ID)
 
         when (intent?.action) {
-            NotificationHandler.SHOW_CAMERA_ACTION -> openCameraUseCase
-                .openLiveClientCamera(
-                    NavDeepLinkBuilder(this),
-                    bundleOf(SHOULD_SHOW_SNOOZE_DIALOG to true)
-                )
-            NotificationHandler.SNOOZE_ACTION -> snoozeNotificationUseCase
-                .snoozeNotifications()
-                .addTo(disposables)
+            NotificationHandler.SHOW_CAMERA_ACTION ->
+                openCameraUseCase
+                    .openLiveClientCamera(
+                        NavDeepLinkBuilder(this),
+                        bundleOf(SHOULD_SHOW_SNOOZE_DIALOG to true),
+                    )
+
+            NotificationHandler.SNOOZE_ACTION ->
+                snoozeNotificationUseCase
+                    .snoozeNotifications()
+                    .addTo(disposables)
         }
     }
 

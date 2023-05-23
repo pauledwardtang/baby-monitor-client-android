@@ -10,15 +10,17 @@ import com.google.gson.JsonParseException
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 import org.java_websocket.WebSocket
 import timber.log.Timber
-import javax.inject.Inject
 
 class WebSocketServerService : Service() {
 
     private lateinit var serverHandler: WebSocketServerHandler
+
     @Inject
     internal lateinit var gson: Gson
+
     @Inject
     internal lateinit var debugNotificationManager: DebugNotificationManager
 

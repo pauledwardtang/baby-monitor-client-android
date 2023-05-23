@@ -2,11 +2,11 @@ package co.netguru.baby.monitor.client.feature.communication.websocket
 
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class MessageParser @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
 ) {
     fun parseWebSocketMessage(event: RxWebSocketClient.Event.Message): Message? {
         return try {

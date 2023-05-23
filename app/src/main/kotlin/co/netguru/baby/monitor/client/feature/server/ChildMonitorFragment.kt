@@ -30,9 +30,9 @@ import co.netguru.baby.monitor.client.feature.communication.webrtc.server.WebRtc
 import co.netguru.baby.monitor.client.feature.debug.DebugModule
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisService
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisService.VoiceAnalysisBinder
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.fragment_child_monitor.*
 import timber.log.Timber
-import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class ChildMonitorFragment : BaseFragment(), ServiceConnection {
@@ -49,6 +49,7 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
 
     @Inject
     internal lateinit var debugModule: DebugModule
+
     @Inject
     internal lateinit var factory: ViewModelProvider.Factory
     private var voiceAnalysisServiceBinder: VoiceAnalysisBinder? = null
@@ -101,7 +102,7 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requireContext().allPermissionsGranted(Companion.permissions)) {
@@ -117,6 +118,7 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
         when (service) {
             is WebRtcService.Binder ->
                 handleWebRtcBinder(service)
+
             is VoiceAnalysisBinder -> {
                 Timber.i("VoiceAnalysisService service connected")
                 voiceAnalysisServiceBinder = service
@@ -127,7 +129,7 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
     fun handleLowBattery() {
         childMonitorViewModel.notifyLowBattery(
             title = getString(R.string.notification_low_battery_title),
-            text = getString(R.string.notification_low_battery_text)
+            text = getString(R.string.notification_low_battery_text),
         )
     }
 
@@ -155,7 +157,8 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
             viewLifecycleOwner,
             Observer { isNightModeEnabled ->
                 nightModeGroup.isVisible = isNightModeEnabled
-            })
+            },
+        )
     }
 
     private fun dismissPairingDialog() {
@@ -171,7 +174,7 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
             R.string.pairing_dialog_title,
             requireContext().getString(R.string.pairing_dialog_message, pairingCode),
             R.string.accept,
-            R.string.decline
+            R.string.decline,
         ).show(childFragmentManager, PAIRING_CODE_DIALOG_TAG)
     }
 
@@ -193,59 +196,75 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
             }
         }
 
-        serverViewModel.timer.observe(viewLifecycleOwner, Observer { secondsLeft ->
-            timer.text = if (secondsLeft != null && secondsLeft < VIDEO_PREVIEW_MAX_TIME) {
-                getString(
-                    R.string.message_disabling_video_preview_soon,
-                    "0:%02d".format(secondsLeft)
-                )
-            } else {
-                ""
-            }
-        })
+        serverViewModel.timer.observe(
+            viewLifecycleOwner,
+            Observer { secondsLeft ->
+                timer.text = if (secondsLeft != null && secondsLeft < VIDEO_PREVIEW_MAX_TIME) {
+                    getString(
+                        R.string.message_disabling_video_preview_soon,
+                        "0:%02d".format(secondsLeft),
+                    )
+                } else {
+                    ""
+                }
+            },
+        )
 
         serverViewModel.rtcConnectionStatus.observeNonNull(viewLifecycleOwner) { connectionState ->
             when (connectionState) {
                 RtcConnectionState.ConnectionOffer -> voiceAnalysisServiceBinder?.stopRecording()
                 RtcConnectionState.Disconnected,
-                RtcConnectionState.Error -> voiceAnalysisServiceBinder?.startRecording()
+                RtcConnectionState.Error,
+                -> voiceAnalysisServiceBinder?.startRecording()
+
                 else -> Unit
             }
         }
-        serverViewModel.cameraState.observe(viewLifecycleOwner, Observer { cameraState ->
-            webRtcServiceBinder?.enableCamera(
-                cameraState.previewEnabled ||
-                        cameraState.streamingEnabled
-            )
-        })
-        serverViewModel.pulsatingViewStatus.observe(viewLifecycleOwner, Observer { status ->
-            Timber.d("Client status: $status.")
-            when (status) {
-                ClientConnectionStatus.CLIENT_CONNECTED ->
-                    pulsatingView.start()
-                ClientConnectionStatus.EMPTY ->
-                    pulsatingView.stop()
-            }
-        })
+        serverViewModel.cameraState.observe(
+            viewLifecycleOwner,
+            Observer { cameraState ->
+                webRtcServiceBinder?.enableCamera(
+                    cameraState.previewEnabled ||
+                        cameraState.streamingEnabled,
+                )
+            },
+        )
+        serverViewModel.pulsatingViewStatus.observe(
+            viewLifecycleOwner,
+            Observer { status ->
+                Timber.d("Client status: $status.")
+                when (status) {
+                    ClientConnectionStatus.CLIENT_CONNECTED ->
+                        pulsatingView.start()
 
-        serverViewModel.pairingCodeLiveData.observe(viewLifecycleOwner, Observer { pairingCode ->
-            if (pairingCode.isNotEmpty()) {
-                showPairingDialog(pairingCode)
-            } else {
-                dismissPairingDialog()
-            }
-        })
+                    ClientConnectionStatus.EMPTY ->
+                        pulsatingView.stop()
+                }
+            },
+        )
+
+        serverViewModel.pairingCodeLiveData.observe(
+            viewLifecycleOwner,
+            Observer { pairingCode ->
+                if (pairingCode.isNotEmpty()) {
+                    showPairingDialog(pairingCode)
+                } else {
+                    dismissPairingDialog()
+                }
+            },
+        )
 
         serverViewModel.voiceAnalysisOptionLiveData.observe(
             viewLifecycleOwner,
             Observer { voiceAnalysisOption ->
                 voiceAnalysisServiceBinder?.setVoiceAnalysisOption(voiceAnalysisOption)
-            })
+            },
+        )
         serverViewModel.noiseLevelLiveData.observe(
             viewLifecycleOwner,
             Observer { noiseLevel ->
                 voiceAnalysisServiceBinder?.setNoiseDetectionLevel(noiseLevel)
-            }
+            },
         )
     }
 
@@ -266,22 +285,29 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
 
     private fun registerNsdService() {
         serverViewModel.registerNsdService()
-        serverViewModel.nsdState.observe(viewLifecycleOwner, Observer {
-            if (it is NsdState.Error) showSnackbarMessage(R.string.nsd_service_registration_failed)
-        })
+        serverViewModel.nsdState.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it is NsdState.Error) {
+                    showSnackbarMessage(
+                        R.string.nsd_service_registration_failed,
+                    )
+                }
+            },
+        )
     }
 
     private fun bindServices() {
         bindService(
             VoiceAnalysisService::class.java,
             this,
-            Service.BIND_AUTO_CREATE
+            Service.BIND_AUTO_CREATE,
         )
         requireContext().run {
             bindService(
                 Intent(this, WebRtcService::class.java),
                 this@ChildMonitorFragment,
-                Service.BIND_AUTO_CREATE
+                Service.BIND_AUTO_CREATE,
             )
         }
     }
@@ -299,7 +325,8 @@ class ChildMonitorFragment : BaseFragment(), ServiceConnection {
         private const val PAIRING_CODE_DIALOG_TAG = "PAIRING_DIALOG_TAG"
 
         private val permissions = arrayOf(
-            RECORD_AUDIO, CAMERA
+            RECORD_AUDIO,
+            CAMERA,
         )
     }
 }

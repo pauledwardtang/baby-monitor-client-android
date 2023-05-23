@@ -39,8 +39,10 @@ class OpenCameraUseCaseTest {
     @Test
     fun `should send openCameraEvent to firebase`() {
         openCameraUseCase.openLiveClientCamera(navDeepLinkBuilder, snoozeDialogArgument)
-        verify(analyticsManager).logEvent(com.nhaarman.mockitokotlin2.check {
-            assert(it is Event.Simple && it.eventType == EventType.NOTIFICATION_OPEN_CAMERA)
-        })
+        verify(analyticsManager).logEvent(
+            com.nhaarman.mockitokotlin2.check {
+                assert(it is Event.Simple && it.eventType == EventType.NOTIFICATION_OPEN_CAMERA)
+            },
+        )
     }
 }

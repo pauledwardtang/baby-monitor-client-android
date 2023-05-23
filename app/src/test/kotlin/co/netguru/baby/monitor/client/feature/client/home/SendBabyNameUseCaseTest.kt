@@ -4,7 +4,11 @@ import co.netguru.baby.monitor.RxSchedulersOverrideRule
 import co.netguru.baby.monitor.client.data.DataRepository
 import co.netguru.baby.monitor.client.data.client.ChildDataEntity
 import co.netguru.baby.monitor.client.feature.communication.websocket.RxWebSocketClient
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import org.junit.Assert.assertEquals
@@ -33,8 +37,10 @@ class SendBabyNameUseCaseTest {
             .assertComplete()
 
         verify(dataRepository).getChildData()
-        verify(rxWebSocketClient).send(check {
-            assertEquals(childDataEntity.name, it.babyName)
-        })
+        verify(rxWebSocketClient).send(
+            check {
+                assertEquals(childDataEntity.name, it.babyName)
+            },
+        )
     }
 }

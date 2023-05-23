@@ -5,12 +5,12 @@ import co.netguru.baby.monitor.client.feature.firebasenotification.NotificationT
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import timber.log.Timber
 
 class NotifyBabyEventUseCase(
     private val notificationSender: FirebaseNotificationSender,
-    private val notificationTexts: Map<String, String>
+    private val notificationTexts: Map<String, String>,
 ) {
     private val babyEvents: PublishSubject<BabyEvent> = PublishSubject.create()
 
@@ -22,7 +22,7 @@ class NotifyBabyEventUseCase(
         return notificationSender.broadcastNotificationToFcm(
             notificationTitle ?: error("Notification title missing"),
             notificationTexts[NOTIFICATION_TEXT_KEY] ?: error("Notification text missing"),
-            notificationType
+            notificationType,
         )
     }
 

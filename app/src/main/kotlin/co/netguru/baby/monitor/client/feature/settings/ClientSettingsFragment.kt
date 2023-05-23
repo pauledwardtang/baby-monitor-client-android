@@ -15,7 +15,12 @@ import androidx.lifecycle.ViewModelProvider
 import co.netguru.baby.monitor.client.BuildConfig
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
-import co.netguru.baby.monitor.client.common.extensions.*
+import co.netguru.baby.monitor.client.common.extensions.BITMAP_AUTO_SIZE
+import co.netguru.baby.monitor.client.common.extensions.allPermissionsGranted
+import co.netguru.baby.monitor.client.common.extensions.babyProfileImage
+import co.netguru.baby.monitor.client.common.extensions.observeNonNull
+import co.netguru.baby.monitor.client.common.extensions.showSnackbarMessage
+import co.netguru.baby.monitor.client.common.extensions.startAppSettings
 import co.netguru.baby.monitor.client.feature.client.home.ClientHomeViewModel
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisOption
 import io.reactivex.Observable
@@ -24,11 +29,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_client_settings.*
-import pl.aprilapps.easyphotopicker.EasyImage
 import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_client_settings.*
+import pl.aprilapps.easyphotopicker.EasyImage
 
 class ClientSettingsFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_client_settings
@@ -64,7 +69,7 @@ class ClientSettingsFragment : BaseFragment() {
             R.drawable.ic_select_photo_placeholder,
             BITMAP_AUTO_SIZE,
             R.color.alpha_accent,
-            R.drawable.ic_select_photo_camera
+            R.drawable.ic_select_photo_camera,
         )
 
         childNameEt.onFocusChangeListener =
@@ -112,7 +117,7 @@ class ClientSettingsFragment : BaseFragment() {
             }?.let {
                 configurationViewModel.chooseVoiceAnalysisOption(
                     clientViewModel,
-                    it
+                    it,
                 )
             }
         }
@@ -125,8 +130,10 @@ class ClientSettingsFragment : BaseFragment() {
             }
             if (!child.image.isNullOrEmpty()) {
                 childPhotoIv.babyProfileImage(
-                    child.image, -1f,
-                    R.color.alpha_accent, R.drawable.ic_select_photo_camera
+                    child.image,
+                    -1f,
+                    R.color.alpha_accent,
+                    R.drawable.ic_select_photo_camera,
                 )
             }
             checkVoiceAnalysisOption(resolveOption(child.voiceAnalysisOption))
@@ -134,30 +141,38 @@ class ClientSettingsFragment : BaseFragment() {
                 child.voiceAnalysisOption == VoiceAnalysisOption.NOISE_DETECTION
             noiseDetectionSeekBar.progress = child.noiseLevel
         }
-        configurationViewModel.resetState.observe(viewLifecycleOwner, Observer { resetState ->
-            when (resetState) {
-                is ChangeState.InProgress -> setupResetButton(true)
-                is ChangeState.Failed -> setupResetButton(false)
-            }
-        })
+        configurationViewModel.resetState.observe(
+            viewLifecycleOwner,
+            Observer { resetState ->
+                when (resetState) {
+                    is ChangeState.InProgress -> setupResetButton(true)
+                    is ChangeState.Failed -> setupResetButton(false)
+                }
+            },
+        )
 
         configurationViewModel.voiceAnalysisOptionState.observe(
             viewLifecycleOwner,
             Observer { voiceAnalysisChangeState ->
                 setupVoiceAnalysisRadioButtons(voiceAnalysisChangeState)
-            })
+            },
+        )
 
-        configurationViewModel.noiseLevelState.observe(viewLifecycleOwner,
+        configurationViewModel.noiseLevelState.observe(
+            viewLifecycleOwner,
             Observer { noiseLevelState ->
                 setupNoiseLevelSeekbar(noiseLevelState)
-            })
+            },
+        )
     }
 
     private fun setupNoiseLevelSeekbar(noiseLevelState: Pair<ChangeState, Int?>) {
         noiseDetectionSeekBar.isEnabled = noiseLevelState.first != ChangeState.InProgress
-        if (noiseLevelState.first == ChangeState.Failed) setPreviousValue(
-            noiseLevelState
-        )
+        if (noiseLevelState.first == ChangeState.Failed) {
+            setPreviousValue(
+                noiseLevelState,
+            )
+        }
         hideNoiseChangeProgressAnimation(noiseLevelState)
         noiseLevelProgress.setState(noiseLevelState)
     }
@@ -174,7 +189,7 @@ class ClientSettingsFragment : BaseFragment() {
                 .delay(
                     resources.getInteger(R.integer.done_fail_animation_duration).toLong(),
                     TimeUnit.MILLISECONDS,
-                    Schedulers.io()
+                    Schedulers.io(),
                 )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { _ ->
@@ -185,7 +200,9 @@ class ClientSettingsFragment : BaseFragment() {
         }
     }
 
-    private fun setupVoiceAnalysisRadioButtons(voiceAnalysisChangeState: Pair<ChangeState, VoiceAnalysisOption?>) {
+    private fun setupVoiceAnalysisRadioButtons(
+        voiceAnalysisChangeState: Pair<ChangeState, VoiceAnalysisOption?>,
+    ) {
         machineLearningOption.isEnabled = voiceAnalysisChangeState.first != ChangeState.InProgress
         noiseDetectionOption.isEnabled = voiceAnalysisChangeState.first != ChangeState.InProgress
         voiceAnalysisChangeState.second?.run {
@@ -194,7 +211,7 @@ class ClientSettingsFragment : BaseFragment() {
     }
 
     private fun resolveOption(
-        voiceAnalysisOption: VoiceAnalysisOption
+        voiceAnalysisOption: VoiceAnalysisOption,
     ): Int {
         return when (voiceAnalysisOption) {
             VoiceAnalysisOption.MACHINE_LEARNING -> R.id.machineLearningOption
@@ -222,35 +239,37 @@ class ClientSettingsFragment : BaseFragment() {
         EasyImage.openChooserWithDocuments(
             this,
             getString(R.string.dialog_title_choose_source),
-            EasyImage.REQ_SOURCE_CHOOSER
+            EasyImage.REQ_SOURCE_CHOOSER,
         )
     }
 
     private fun setupNoiseDetectionSeekbar() {
         blockDrawerMovement()
         viewDisposables += Observable.create<SeekBarState> { emitter ->
-            noiseDetectionSeekBar.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (fromUser) emitter.onNext(SeekBarState.ProgressChange(progress))
-                }
+            noiseDetectionSeekBar.setOnSeekBarChangeListener(
+                object :
+                    SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        progress: Int,
+                        fromUser: Boolean,
+                    ) {
+                        if (fromUser) emitter.onNext(SeekBarState.ProgressChange(progress))
+                    }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    emitter.onNext(SeekBarState.StartTracking(seekBar?.progress ?: 0))
-                }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        emitter.onNext(SeekBarState.StartTracking(seekBar?.progress ?: 0))
+                    }
 
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    emitter.onNext(
-                        SeekBarState.EndTracking(
-                            seekBar?.progress ?: configurationViewModel.noiseLevelInitialValue
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        emitter.onNext(
+                            SeekBarState.EndTracking(
+                                seekBar?.progress ?: configurationViewModel.noiseLevelInitialValue,
+                            ),
                         )
-                    )
-                }
-            })
+                    }
+                },
+            )
             emitter.setCancellable { noiseDetectionSeekBar.setOnSeekBarChangeListener(null) }
         }
             .distinctUntilChanged()
@@ -263,6 +282,7 @@ class ClientSettingsFragment : BaseFragment() {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> // Disallow Drawer to intercept touch events.
                     v.parent.requestDisallowInterceptTouchEvent(true)
+
                 MotionEvent.ACTION_UP -> // Allow Drawer to intercept touch events.
                     v.parent.requestDisallowInterceptTouchEvent(false)
             }
@@ -278,13 +298,15 @@ class ClientSettingsFragment : BaseFragment() {
                 configurationViewModel.noiseLevelInitialValue = seekBarState.initialValue
                 (requireView() as? MotionLayout)?.transitionToEnd()
             }
+
             is SeekBarState.EndTracking -> {
                 configurationViewModel.changeNoiseLevel(
                     clientViewModel,
-                    seekBarState.endValue
+                    seekBarState.endValue,
                 )
             }
-            is SeekBarState.ProgressChange
+
+            is SeekBarState.ProgressChange,
             -> noiseLevelProgress.setState(null to seekBarState.progress)
         }
     }
@@ -299,7 +321,7 @@ class ClientSettingsFragment : BaseFragment() {
                 override fun onImagePicked(
                     imageFile: File?,
                     source: EasyImage.ImageSource?,
-                    type: Int
+                    type: Int,
                 ) {
                     imageFile ?: return
                     clientViewModel.selectedChildLiveData.value?.let { child ->
@@ -310,17 +332,18 @@ class ClientSettingsFragment : BaseFragment() {
                 override fun onImagePickerError(
                     e: java.lang.Exception?,
                     source: EasyImage.ImageSource?,
-                    type: Int
+                    type: Int,
                 ) = Unit
 
                 override fun onCanceled(source: EasyImage.ImageSource?, type: Int) = Unit
-            })
+            },
+        )
     }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE &&
@@ -350,7 +373,7 @@ class ClientSettingsFragment : BaseFragment() {
     companion object {
         internal val PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
         private const val PERMISSIONS_REQUEST_CODE = 123
     }

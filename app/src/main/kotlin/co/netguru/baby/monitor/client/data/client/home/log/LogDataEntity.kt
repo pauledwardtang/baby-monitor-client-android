@@ -9,15 +9,15 @@ import org.threeten.bp.LocalDateTime
 data class LogDataEntity(
     @ColumnInfo(name = "action") val action: String,
     @ColumnInfo(name = "time_stamp") val timeStamp: String = LocalDateTime.now().toString(),
-    @ColumnInfo(name = "image") val address: String? = null
+    @ColumnInfo(name = "image") val address: String? = null,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
 
     fun toLogData(image: String?): LogData.Data =
-            LogData.Data(
-                    action = this.action,
-                    timeStamp = LocalDateTime.parse(this.timeStamp),
-                    image = image ?: ""
-            )
+        LogData.Data(
+            action = this.action,
+            timeStamp = LocalDateTime.parse(this.timeStamp),
+            image = image ?: "",
+        )
 }

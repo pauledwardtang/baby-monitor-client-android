@@ -17,7 +17,7 @@ class DebugView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, attributeSetId: Int) : super(
         context,
         attrs,
-        attributeSetId
+        attributeSetId,
     )
 
     private var disposable: Disposable? = null

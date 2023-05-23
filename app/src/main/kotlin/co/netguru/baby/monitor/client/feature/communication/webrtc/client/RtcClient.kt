@@ -6,7 +6,11 @@ import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import co.netguru.baby.monitor.client.common.view.CustomSurfaceViewRenderer
-import co.netguru.baby.monitor.client.feature.communication.webrtc.*
+import co.netguru.baby.monitor.client.feature.communication.webrtc.ConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnAddStream
+import co.netguru.baby.monitor.client.feature.communication.webrtc.OnIceCandidatesChange
+import co.netguru.baby.monitor.client.feature.communication.webrtc.RtcConnectionState
+import co.netguru.baby.monitor.client.feature.communication.webrtc.StreamState
 import co.netguru.baby.monitor.client.feature.communication.webrtc.base.RtcMessageHandler
 import co.netguru.baby.monitor.client.feature.communication.webrtc.observers.ConnectionObserver
 import co.netguru.baby.monitor.client.feature.communication.webrtc.observers.DefaultSdpObserver
@@ -17,13 +21,23 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import org.webrtc.*
+import org.webrtc.AudioSource
+import org.webrtc.AudioTrack
+import org.webrtc.DefaultVideoDecoderFactory
+import org.webrtc.DefaultVideoEncoderFactory
+import org.webrtc.EglBase
+import org.webrtc.IceCandidate
+import org.webrtc.MediaConstraints
+import org.webrtc.MediaStream
+import org.webrtc.PeerConnection
+import org.webrtc.PeerConnectionFactory
+import org.webrtc.SessionDescription
 import timber.log.Timber
 
 class RtcClient(
     private val rtcClientMessageController: RtcClientMessageController,
     private val streamStateListener: (streamState: StreamState) -> Unit,
-    private val remoteView: CustomSurfaceViewRenderer
+    private val remoteView: CustomSurfaceViewRenderer,
 ) : RtcMessageHandler {
 
     private var audioTrack: AudioTrack? = null
@@ -53,7 +67,7 @@ class RtcClient(
 
     fun startCall(
         context: Context,
-        hasRecordAudioPermission: Boolean
+        hasRecordAudioPermission: Boolean,
     ) = Completable.fromAction {
         initRtc(context, hasRecordAudioPermission)
     }
@@ -93,13 +107,13 @@ class RtcClient(
 
     private fun initRtc(
         context: Context,
-        hasRecordAudioPermission: Boolean
+        hasRecordAudioPermission: Boolean,
     ) {
         Timber.i("initializing")
         PeerConnectionFactory.initialize(
             PeerConnectionFactory.InitializationOptions.builder(context)
                 .setEnableInternalTracer(false)
-                .createInitializationOptions()
+                .createInitializationOptions(),
         )
         Timber.i("initialized")
         val encoderFactory = DefaultVideoEncoderFactory(sharedContext, true, false)
@@ -128,13 +142,13 @@ class RtcClient(
 
     private fun createConnection(
         factory: PeerConnectionFactory,
-        hasRecordAudioPermission: Boolean
+        hasRecordAudioPermission: Boolean,
     ) {
         connectionObserver = ConnectionObserver()
 
         peerConnection = factory.createPeerConnection(
             emptyList(),
-            connectionObserver
+            connectionObserver,
         )
         if (hasRecordAudioPermission) addAudioTrack(factory)
 
@@ -144,9 +158,13 @@ class RtcClient(
             .subscribe { streamState ->
                 when (streamState) {
                     is OnIceCandidatesChange ->
-                        rtcClientMessageController.handleIceCandidateChange(streamState.iceCandidateState)
+                        rtcClientMessageController.handleIceCandidateChange(
+                            streamState.iceCandidateState,
+                        )
+
                     is OnAddStream ->
                         handleMediaStream(streamState.mediaStream)
+
                     else -> Unit
                 }
                 reportStreamStateChange(streamState)
@@ -179,9 +197,9 @@ class RtcClient(
                 },
                 onSetFailure = {
                     Timber.d("sdb set failure: $it")
-                }
+                },
             ),
-            constraints
+            constraints,
         )
     }
 
@@ -199,9 +217,9 @@ class RtcClient(
         peerConnection?.setRemoteDescription(
             DefaultSdpObserver(
                 onSetSuccess = { Timber.i("Set success") },
-                onSetFailure = { message -> Timber.e("Failure: $message") }
+                onSetFailure = { message -> Timber.e("Failure: $message") },
             ),
-            SessionDescription(SessionDescription.Type.ANSWER, sdpData.sdp)
+            SessionDescription(SessionDescription.Type.ANSWER, sdpData.sdp),
         )
     }
 
@@ -210,8 +228,8 @@ class RtcClient(
             IceCandidate(
                 iceCandidateData.sdpMid,
                 iceCandidateData.sdpMLineIndex,
-                iceCandidateData.sdp
-            )
+                iceCandidateData.sdp,
+            ),
         )
     }
 

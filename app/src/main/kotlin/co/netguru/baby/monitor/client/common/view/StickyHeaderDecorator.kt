@@ -1,13 +1,13 @@
 package co.netguru.baby.monitor.client.common.view
 
 import android.graphics.Canvas
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 
 class StickyHeaderDecorator(
-    private val listener: StickyHeaderInterface
+    private val listener: StickyHeaderInterface,
 ) : RecyclerView.ItemDecoration() {
 
     private var stickyHeaderHeight = 0
@@ -52,7 +52,7 @@ class StickyHeaderDecorator(
     private fun getChildInContact(
         parent: RecyclerView,
         contactPoint: Int,
-        currentHeaderPos: Int
+        currentHeaderPos: Int,
     ): View? {
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
@@ -79,9 +79,9 @@ class StickyHeaderDecorator(
 
     private fun isHeader(
         parent: RecyclerView,
-        childInContact: View
+        childInContact: View,
     ) = listener.isHeader(
-        parent.getChildAdapterPosition(childInContact)
+        parent.getChildAdapterPosition(childInContact),
     )
 
     /**
@@ -89,7 +89,6 @@ class StickyHeaderDecorator(
      * @param parent ViewGroup: RecyclerView in this case.
      */
     private fun fixLayoutSize(parent: ViewGroup, view: View) {
-
         // Specs for parent (RecyclerView)
         val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY)
         val heightSpec =
@@ -99,12 +98,12 @@ class StickyHeaderDecorator(
         val childWidthSpec = ViewGroup.getChildMeasureSpec(
             widthSpec,
             parent.paddingLeft + parent.paddingRight,
-            view.layoutParams.width
+            view.layoutParams.width,
         )
         val childHeightSpec = ViewGroup.getChildMeasureSpec(
             heightSpec,
             parent.paddingTop + parent.paddingBottom,
-            view.layoutParams.height
+            view.layoutParams.height,
         )
 
         view.measure(childWidthSpec, childHeightSpec)

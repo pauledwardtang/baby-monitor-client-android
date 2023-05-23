@@ -1,7 +1,6 @@
 package co.netguru.baby.monitor.client.feature.settings
 
 import android.app.Activity
-import androidx.lifecycle.ViewModel
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -9,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.ViewModel
 import co.netguru.baby.monitor.client.data.DataRepository
 import co.netguru.baby.monitor.client.data.client.ChildDataEntity
 import io.reactivex.Single
@@ -16,12 +16,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+import timber.log.Timber
 
 class SettingsViewModel @Inject constructor(
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -35,7 +35,8 @@ class SettingsViewModel @Inject constructor(
                 },
                 onError = { error ->
                     Timber.w(error, "Couldn't update child name $name.")
-                })
+                },
+            )
             .addTo(compositeDisposable)
     }
 
@@ -55,7 +56,7 @@ class SettingsViewModel @Inject constructor(
                 onComplete = {
                     Timber.i("data updated")
                 },
-                onError = Timber::e
+                onError = Timber::e,
             ).addTo(compositeDisposable)
     }
 
@@ -83,8 +84,10 @@ class SettingsViewModel @Inject constructor(
             activity.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + activity.packageName)
-                )
+                    Uri.parse(
+                        "http://play.google.com/store/apps/details?id=" + activity.packageName,
+                    ),
+                ),
             )
         }
     }
@@ -92,7 +95,7 @@ class SettingsViewModel @Inject constructor(
     fun hideKeyboard(view: View, context: Context) {
         val inputMethodManager =
             context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
-        inputMethodManager?.hideSoftInputFromWindow(view.getWindowToken(), 0)
+        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     companion object {

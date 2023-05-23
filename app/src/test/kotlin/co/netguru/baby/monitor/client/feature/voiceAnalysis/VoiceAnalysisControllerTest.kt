@@ -12,11 +12,17 @@ import co.netguru.baby.monitor.client.feature.babynotification.NotifyBabyEventUs
 import co.netguru.baby.monitor.client.feature.debug.DebugModule
 import co.netguru.baby.monitor.client.feature.machinelearning.MachineLearning
 import co.netguru.baby.monitor.client.feature.noisedetection.NoiseDetector
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import java.util.Locale
 import org.junit.Rule
 import org.junit.Test
 
@@ -39,8 +45,9 @@ class VoiceAnalysisControllerTest {
     private val machineLearning = mock<MachineLearning>()
     private val analyticsManager = mock<AnalyticsManager>()
     private val recordingDataSubjectMock = PublishSubject.create<RecordingData>()
-    private val recordingController = mock<RecordingController>
-    { on { startRecording() } doReturn recordingDataSubjectMock }
+    private val recordingController = mock<RecordingController> {
+        on { startRecording() } doReturn recordingDataSubjectMock
+    }
     private val noiseRecordingData = RecordingData.NoiseDetection(ShortArray(1))
     private val machineLearningRecordingData =
         RecordingData.MachineLearning(ByteArray(1), ShortArray(1))
@@ -55,7 +62,7 @@ class VoiceAnalysisControllerTest {
         dataRepository,
         machineLearning,
         analyticsManager,
-        recordingController
+        recordingController,
     )
 
     @Test
@@ -87,7 +94,7 @@ class VoiceAnalysisControllerTest {
     fun `should handle processed noise detector data above the default threshold`() {
         val decibelsAboveThreshold = NoiseDetector.DEFAULT_NOISE_LEVEL + 10
         whenever(noiseDetector.processData(noiseRecordingData.shortArray)) doReturn Single.just<Int>(
-            decibelsAboveThreshold
+            decibelsAboveThreshold,
         )
 
         voiceAnalysisController.startRecording()
@@ -101,7 +108,7 @@ class VoiceAnalysisControllerTest {
     fun `should handle processed noise detector data below the default threshold`() {
         val decibelsBelowThreshold = NoiseDetector.DEFAULT_NOISE_LEVEL - 10
         whenever(noiseDetector.processData(noiseRecordingData.shortArray)) doReturn Single.just<Int>(
-            decibelsBelowThreshold
+            decibelsBelowThreshold,
         )
 
         voiceAnalysisController.startRecording()
@@ -117,9 +124,9 @@ class VoiceAnalysisControllerTest {
         val machineLearningData =
             mutableMapOf(MachineLearning.OUTPUT_2_CRYING_BABY to cryingProbabilityAboveThreshold)
         whenever(machineLearning.processData(machineLearningRecordingData.shortArray)) doReturn
-                Single.just<MutableMap<String, Float>>(
-                    machineLearningData
-                )
+            Single.just<MutableMap<String, Float>>(
+                machineLearningData,
+            )
 
         voiceAnalysisController.startRecording()
         recordingDataSubjectMock.onNext(machineLearningRecordingData)
@@ -134,9 +141,9 @@ class VoiceAnalysisControllerTest {
         val machineLearningData =
             mutableMapOf(MachineLearning.OUTPUT_2_CRYING_BABY to cryingProbabilityBelowThreshold)
         whenever(machineLearning.processData(machineLearningRecordingData.shortArray)) doReturn
-                Single.just<MutableMap<String, Float>>(
-                    machineLearningData
-                )
+            Single.just<MutableMap<String, Float>>(
+                machineLearningData,
+            )
 
         voiceAnalysisController.startRecording()
         recordingDataSubjectMock.onNext(machineLearningRecordingData)
@@ -151,12 +158,12 @@ class VoiceAnalysisControllerTest {
             ClientEntity(
                 "address",
                 "key",
-                VoiceAnalysisOption.NOISE_DETECTION
-            )
+                VoiceAnalysisOption.NOISE_DETECTION,
+            ),
         )
 
         (voiceAnalysisController as ServiceController<VoiceAnalysisService>).attachService(
-            voiceAnalysisService
+            voiceAnalysisService,
         )
 
         verify(notificationHandler).showForegroundNotification(voiceAnalysisService)
@@ -167,17 +174,20 @@ class VoiceAnalysisControllerTest {
         val voiceAnalysisOption = VoiceAnalysisOption.NOISE_DETECTION
         val noiseLevel = 50
         whenever(dataRepository.getClientData()) doReturn Maybe.just(
-            ClientEntity("address", "key", voiceAnalysisOption, noiseLevel)
+            ClientEntity("address", "key", voiceAnalysisOption, noiseLevel),
         )
 
         (voiceAnalysisController as ServiceController<VoiceAnalysisService>).attachService(
-            voiceAnalysisService
+            voiceAnalysisService,
         )
 
         assert(voiceAnalysisController.noiseLevel == noiseLevel)
         assert(voiceAnalysisController.voiceAnalysisOption == voiceAnalysisOption)
-        verify(analyticsManager).setUserProperty(argThat {
-            this is UserProperty.VoiceAnalysis && this.value == voiceAnalysisOption.name.toLowerCase()
-        })
+        verify(analyticsManager).setUserProperty(
+            argThat {
+                this is UserProperty.VoiceAnalysis &&
+                    this.value == voiceAnalysisOption.name.lowercase(Locale.getDefault())
+            },
+        )
     }
 }

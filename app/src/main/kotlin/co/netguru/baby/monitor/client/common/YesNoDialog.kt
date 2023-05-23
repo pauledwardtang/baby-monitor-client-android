@@ -54,14 +54,14 @@ class YesNoDialog : androidx.fragment.app.DialogFragment() {
             @StringRes positiveButton: Int = R.string.dialog_yes,
             @StringRes negativeButton: Int = R.string.dialog_no,
             requestCode: Int = -1,
-            params: Bundle? = null
+            params: Bundle? = null,
         ) = YesNoDialog().apply {
             arguments = bundleOf(
                 KEY_TITLE to title,
                 KEY_MESSAGE to message,
                 KEY_POSITIVE to positiveButton,
                 KEY_NEGATIVE to negativeButton,
-                KEY_REQUEST_CODE to requestCode
+                KEY_REQUEST_CODE to requestCode,
             ).also {
                 if (params != null) {
                     it.putAll(params)

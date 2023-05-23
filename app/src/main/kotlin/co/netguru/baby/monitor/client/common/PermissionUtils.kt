@@ -16,7 +16,7 @@ object PermissionUtils {
     private fun hasPermission(context: Context, permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
-            permission
+            permission,
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -25,7 +25,7 @@ object PermissionUtils {
         requestResultCode: Int,
         resultRequestCode: Int,
         grantResults: IntArray,
-        vararg permission: String
+        vararg permission: String,
     ): PermissionResult {
         return when {
             resultRequestCode != requestResultCode -> PermissionResult.NOT_GRANTED
@@ -33,9 +33,10 @@ object PermissionUtils {
             permission.any {
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
-                    it
+                    it,
                 )
             } -> PermissionResult.SHOW_RATIONALE
+
             else -> PermissionResult.NOT_GRANTED
         }
     }
@@ -44,5 +45,5 @@ object PermissionUtils {
 enum class PermissionResult {
     GRANTED,
     NOT_GRANTED,
-    SHOW_RATIONALE
+    SHOW_RATIONALE,
 }

@@ -13,8 +13,8 @@ import androidx.core.app.NotificationManagerCompat
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.extensions.addActions
 import co.netguru.baby.monitor.client.common.extensions.getColorCompat
-import co.netguru.baby.monitor.client.feature.client.home.ClientHomeActivity
 import co.netguru.baby.monitor.client.feature.babynotification.BabyEventActionIntentService
+import co.netguru.baby.monitor.client.feature.client.home.ClientHomeActivity
 import co.netguru.baby.monitor.client.feature.server.ServerActivity
 import org.jetbrains.anko.singleTop
 
@@ -39,8 +39,8 @@ class NotificationHandler(private val context: Context) {
                         service,
                         0,
                         Intent(service, ServerActivity::class.java).singleTop(),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                    ),
                 )
                 .build()
 
@@ -53,7 +53,7 @@ class NotificationHandler(private val context: Context) {
         title: String,
         content: String,
         iconResId: Int? = null,
-        actions: List<NotificationCompat.Action>? = null
+        actions: List<NotificationCompat.Action>? = null,
     ): Notification {
         val resultIntent = Intent(context, ClientHomeActivity::class.java).singleTop()
         val resultPendingIntent =
@@ -97,7 +97,7 @@ class NotificationHandler(private val context: Context) {
                 val channel = NotificationChannel(
                     context.getString(R.string.notification_channel_id),
                     name,
-                    importance
+                    importance,
                 ).apply {
                     description = descriptionText
                 }
@@ -110,7 +110,7 @@ class NotificationHandler(private val context: Context) {
 
         fun createNotificationAction(
             action: String,
-            context: Context
+            context: Context,
         ): NotificationCompat.Action {
             val title = when (action) {
                 SHOW_CAMERA_ACTION -> context.resources.getString(R.string.notification_show_camera)
@@ -125,14 +125,14 @@ class NotificationHandler(private val context: Context) {
             return NotificationCompat.Action(
                 0,
                 title,
-                getActionPendingIntent(requestCode, action, context)
+                getActionPendingIntent(requestCode, action, context),
             )
         }
 
         private fun getActionPendingIntent(
             requestCode: Int,
             action: String,
-            context: Context
+            context: Context,
         ): PendingIntent {
             return PendingIntent.getService(
                 context,
@@ -140,7 +140,7 @@ class NotificationHandler(private val context: Context) {
                 Intent(context, BabyEventActionIntentService::class.java).apply {
                     this.action = action
                 },
-                PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_IMMUTABLE,
             )
         }
     }

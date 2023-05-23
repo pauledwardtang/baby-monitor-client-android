@@ -10,7 +10,12 @@ import co.netguru.baby.monitor.client.feature.analytics.EventType
 import co.netguru.baby.monitor.client.feature.communication.websocket.Message.Companion.RESET_ACTION
 import co.netguru.baby.monitor.client.feature.communication.websocket.MessageController
 import co.netguru.baby.monitor.client.feature.firebasenotification.FirebaseInstanceManager
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Rule
@@ -34,7 +39,7 @@ class ResetAppUseCaseTest {
             notificationHandler,
             firebaseInstanceManager,
             dataRepository,
-            analyticsManager
+            analyticsManager,
         )
 
     @Test
@@ -49,9 +54,11 @@ class ResetAppUseCaseTest {
     fun `should send reset action when messageSender is provided`() {
         resetAppUseCase.resetApp(messageSender).subscribe()
 
-        verify(messageSender).sendMessage(check {
-            assert(it.action == RESET_ACTION)
-        })
+        verify(messageSender).sendMessage(
+            check {
+                assert(it.action == RESET_ACTION)
+            },
+        )
     }
 
     @Test
@@ -76,8 +83,10 @@ class ResetAppUseCaseTest {
     fun `should send resetApp event to firebase`() {
         resetAppUseCase.resetApp().subscribe()
 
-        verify(analyticsManager).logEvent(check {
-            it is Event.Simple && it.eventType == EventType.RESET_APP
-        })
+        verify(analyticsManager).logEvent(
+            check {
+                it is Event.Simple && it.eventType == EventType.RESET_APP
+            },
+        )
     }
 }

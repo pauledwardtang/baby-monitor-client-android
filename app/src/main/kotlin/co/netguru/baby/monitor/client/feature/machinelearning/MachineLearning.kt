@@ -9,8 +9,8 @@ import timber.log.Timber
 class MachineLearning(context: Context) {
 
     private val inferenceInterface = TensorFlowInferenceInterface(
-            context.assets,
-            "model_exp76.pb"
+        context.assets,
+        "model_exp76.pb",
     )
     private val sampleRateList = intArrayOf(SAMPLING_RATE)
 

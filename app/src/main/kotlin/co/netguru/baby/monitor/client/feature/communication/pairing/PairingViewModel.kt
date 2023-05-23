@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class PairingViewModel @Inject constructor(
     private val pairingUseCase: PairingUseCase,
-    randomiser: Randomiser
+    randomiser: Randomiser,
 ) : ViewModel() {
 
     internal val pairingCompletedState: LiveData<Boolean> = pairingUseCase.pairingCompletedState

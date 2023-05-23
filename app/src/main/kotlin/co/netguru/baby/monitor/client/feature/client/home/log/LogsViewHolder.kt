@@ -13,14 +13,14 @@ import org.threeten.bp.temporal.ChronoUnit
 
 abstract class LogsViewHolder(
     val parent: ViewGroup,
-    viewType: Int
+    viewType: Int,
 ) : BaseViewHolder<LogData>(
-    LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+    LayoutInflater.from(parent.context).inflate(viewType, parent, false),
 ) {
 
     class DataLogsViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) : LogsViewHolder(parent, viewType) {
 
         override fun bindView(item: LogData) {
@@ -31,7 +31,9 @@ abstract class LogsViewHolder(
                     (HOUR_IN_MINUTES - hourBefore.until(item.timeStamp, ChronoUnit.MINUTES)).toInt()
                 itemActivityLogActionTimestampTv.text = if (item.timeStamp.isAfter(hourBefore)) {
                     itemView.context.resources.getQuantityString(
-                        R.plurals.minutes_ago, minutesAgo, minutesAgo
+                        R.plurals.minutes_ago,
+                        minutesAgo,
+                        minutesAgo,
                     )
                 } else {
                     item.timeStamp.format(DateProvider.timeStampFormatter)
@@ -42,7 +44,7 @@ abstract class LogsViewHolder(
 
     class HeaderViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) : LogsViewHolder(parent, viewType) {
 
         override fun bindView(item: LogData) {
@@ -53,12 +55,14 @@ abstract class LogsViewHolder(
             itemActivityLogHeaderTv.text = when {
                 item.timeStamp.isAfter(today) -> itemView.context.getString(
                     R.string.date_today,
-                    baseText
+                    baseText,
                 )
+
                 item.timeStamp.isAfter(yesterday) -> itemView.context.getString(
                     R.string.date_yesterday,
-                    baseText
+                    baseText,
                 )
+
                 else -> baseText
             }
         }
@@ -66,7 +70,7 @@ abstract class LogsViewHolder(
 
     class EndTextHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) : LogsViewHolder(parent, viewType) {
         override fun bindView(item: LogData) = Unit
     }

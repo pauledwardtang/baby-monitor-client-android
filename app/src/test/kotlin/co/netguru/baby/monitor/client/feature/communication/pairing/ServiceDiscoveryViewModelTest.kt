@@ -23,12 +23,12 @@ class ServiceDiscoveryViewModelTest {
     private val multicastLock: WifiManager.MulticastLock = mock()
     private val wifiManager: WifiManager = mock {
         on { createMulticastLock(ServiceDiscoveryViewModel.MUTLICAST_LOCK_TAG) }.doReturn(
-            multicastLock
+            multicastLock,
         )
     }
 
     private val serviceDiscoveryViewModel = ServiceDiscoveryViewModel(
-        nsdServiceManager
+        nsdServiceManager,
     )
 
     @Test

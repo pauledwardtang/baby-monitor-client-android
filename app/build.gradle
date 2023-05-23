@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 ext {
 
@@ -126,6 +127,16 @@ kapt {
 
 androidExtensions {
     experimental = true
+}
+
+check.configure {
+    dependsOn = dependsOn.findAll { it.name != 'detekt' }
+}
+
+ktlint {
+    android = true
+    version = "0.46.1"
+    coloredOutput = true
 }
 
 configurations {

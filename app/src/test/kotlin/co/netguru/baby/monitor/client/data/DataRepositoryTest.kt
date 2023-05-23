@@ -9,7 +9,13 @@ import co.netguru.baby.monitor.client.data.splash.AppStateHandler
 import co.netguru.baby.monitor.client.feature.analytics.AnalyticsManager
 import co.netguru.baby.monitor.client.feature.analytics.UserProperty
 import co.netguru.baby.monitor.client.feature.voiceAnalysis.VoiceAnalysisOption
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
+import java.util.Locale
 import org.junit.Rule
 import org.junit.Test
 
@@ -74,9 +80,13 @@ class DataRepositoryTest {
         dataRepository.saveConfiguration(configuration)
             .test()
             .assertComplete()
-        verify(analyticsManager).setUserProperty(argThat {
-            this is UserProperty.AppStateProperty && this.value == configuration.name.toLowerCase()
-        })
+        verify(analyticsManager).setUserProperty(
+            argThat {
+                this is UserProperty.AppStateProperty && this.value == configuration.name.lowercase(
+                    Locale.getDefault(),
+                )
+            },
+        )
     }
 
     @Test
@@ -87,9 +97,13 @@ class DataRepositoryTest {
             .test()
             .assertComplete()
 
-        verify(analyticsManager).setUserProperty(argThat {
-            this is UserProperty.VoiceAnalysis && this.value == voiceAnalysis.name.toLowerCase()
-        })
+        verify(analyticsManager).setUserProperty(
+            argThat {
+                this is UserProperty.VoiceAnalysis && this.value == voiceAnalysis.name.lowercase(
+                    Locale.getDefault(),
+                )
+            },
+        )
     }
 
     @Test
@@ -111,9 +125,11 @@ class DataRepositoryTest {
             .test()
             .assertComplete()
 
-        verify(analyticsManager).setUserProperty(argThat {
-            this is UserProperty.NoiseLevel && this.value == noiseLevel.toString()
-        })
+        verify(analyticsManager).setUserProperty(
+            argThat {
+                this is UserProperty.NoiseLevel && this.value == noiseLevel.toString()
+            },
+        )
     }
 
     @Test

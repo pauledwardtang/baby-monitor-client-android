@@ -10,12 +10,12 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import timber.log.Timber
 
 class SplashViewModel @Inject constructor(
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
 ) : ViewModel() {
     internal val appState = MutableLiveData<AppState>()
 
@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
                 onSuccess = {
                     appState.postValue(it.second)
                 },
-                onError = Timber::e
+                onError = Timber::e,
             ).addTo(compositeDisposable)
     }
 

@@ -10,28 +10,30 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.net.URI
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription
 import timber.log.Timber
-import java.net.URI
 
 class RtcClientMessageController(
     private val messageParser: MessageParser,
     private val serverUri: URI,
-    private val rxWebSocketClient: RxWebSocketClient
+    private val rxWebSocketClient: RxWebSocketClient,
 ) {
 
     lateinit var rtcMessageHandler: RtcMessageHandler
     private var compositeDisposable = CompositeDisposable()
 
     fun startRtcSession(
-        sessionDescription: SessionDescription
+        sessionDescription: SessionDescription,
     ) {
         compositeDisposable += rxWebSocketClient.events(serverUri = serverUri)
             .doOnNext {
                 if (it is RxWebSocketClient.Event.Open ||
                     it is RxWebSocketClient.Event.Connected
-                ) sendOffer(sessionDescription)
+                ) {
+                    sendOffer(sessionDescription)
+                }
             }
             .ofType(RxWebSocketClient.Event.Message::class.java)
             .subscribe { event: RxWebSocketClient.Event.Message ->
@@ -44,7 +46,11 @@ class RtcClientMessageController(
     }
 
     fun handleIceCandidateChange(iceCandidateState: IceCandidateState) {
-        if (iceCandidateState is OnIceCandidateAdded) sendIceCandidate(iceCandidateState.iceCandidate)
+        if (iceCandidateState is OnIceCandidateAdded) {
+            sendIceCandidate(
+                iceCandidateState.iceCandidate,
+            )
+        }
     }
 
     private fun sendIceCandidate(iceCandidate: IceCandidate) {
@@ -53,9 +59,9 @@ class RtcClientMessageController(
                 iceCandidate = Message.IceCandidateData(
                     sdp = iceCandidate.sdp,
                     sdpMid = iceCandidate.sdpMid,
-                    sdpMLineIndex = iceCandidate.sdpMLineIndex
-                )
-            )
+                    sdpMLineIndex = iceCandidate.sdpMLineIndex,
+                ),
+            ),
         )
     }
 
@@ -64,9 +70,9 @@ class RtcClientMessageController(
             Message(
                 sdpOffer = Message.SdpData(
                     sdp = sessionDescription.description,
-                    type = sessionDescription.type.canonicalForm()
-                )
-            )
+                    type = sessionDescription.type.canonicalForm(),
+                ),
+            ),
         )
     }
 
@@ -88,6 +94,7 @@ class RtcClientMessageController(
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onComplete = { Timber.i("message sent: $message") },
-                onError = { Timber.e(it) })
+                onError = { Timber.e(it) },
+            )
     }
 }

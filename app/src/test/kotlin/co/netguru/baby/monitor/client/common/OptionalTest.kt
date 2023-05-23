@@ -34,7 +34,7 @@ class OptionalTest {
     fun `Should return underlying object when toNullable called`() {
         val underlyingString = "Test"
         val nonNullOptionalWithUnderlyingString: Optional<String> = Optional.Some(
-                underlyingString
+            underlyingString,
         )
         assertEquals(underlyingString, nonNullOptionalWithUnderlyingString.toNullable())
 
@@ -87,12 +87,12 @@ class OptionalTest {
         val firstValue = "test"
         val secondValue = "test2"
         val test = Observable.fromArray(
-                "test".toOptional(),
-                Optional.None,
-                "test2".toOptional()
+            "test".toOptional(),
+            Optional.None,
+            "test2".toOptional(),
         )
-                .filterOptionalNone()
-                .test()
+            .filterOptionalNone()
+            .test()
 
         test.assertValues(firstValue, secondValue)
     }
@@ -101,14 +101,14 @@ class OptionalTest {
     fun `Filter optional on single should filter none and pass value into stream`() {
         val firstValue = "test"
         val testOptionalSome = Single.just(firstValue.toOptional())
-                .filterOptionalNone()
-                .test()
+            .filterOptionalNone()
+            .test()
 
         testOptionalSome.assertValues(firstValue)
 
         val testOptionalNone = Single.just(Optional.None as Optional<String>)
-                .filterOptionalNone()
-                .test()
+            .filterOptionalNone()
+            .test()
 
         testOptionalNone.assertNoValues()
     }
@@ -117,14 +117,14 @@ class OptionalTest {
     fun `Filter optional on maybe should filter none and pass value into stream`() {
         val firstValue = "test"
         val testOptionalSome = Maybe.just(firstValue.toOptional())
-                .filterOptionalNone()
-                .test()
+            .filterOptionalNone()
+            .test()
 
         testOptionalSome.assertValues(firstValue)
 
         val testOptionalNone = Maybe.just(Optional.None as Optional<String>)
-                .filterOptionalNone()
-                .test()
+            .filterOptionalNone()
+            .test()
 
         testOptionalNone.assertNoValues()
     }

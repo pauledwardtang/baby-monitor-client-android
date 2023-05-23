@@ -8,14 +8,14 @@ data class Message(
     @SerializedName("notification")
     val notification: Notification? = null,
     @SerializedName("data")
-    val data: Data? = null
+    val data: Data? = null,
 )
 
 data class Notification(
     @SerializedName("title")
     val title: String,
     @SerializedName("text")
-    val text: String
+    val text: String,
 )
 
 data class Data(
@@ -24,5 +24,5 @@ data class Data(
     @SerializedName("text")
     val text: String,
     @SerializedName("notification_type")
-    val type: String
+    val type: String,
 )

@@ -9,8 +9,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Test
 import java.net.URI
+import org.junit.Test
 
 class ClientLiveCameraFragmentViewModelTest {
 
@@ -33,12 +33,16 @@ class ClientLiveCameraFragmentViewModelTest {
             liveCameraRemoteRenderer,
             serverUri,
             client,
-            true
+            true,
         )
 
         verify(rtcClientController).startCall(
-            eq(context), eq(liveCameraRemoteRenderer), eq(serverUri),
-            eq(client), any(), any()
+            eq(context),
+            eq(liveCameraRemoteRenderer),
+            eq(serverUri),
+            eq(client),
+            any(),
+            any(),
         )
         assert(clientLiveCameraFragmentViewModel.callInProgress.get())
     }

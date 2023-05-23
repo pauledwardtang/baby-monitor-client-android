@@ -14,5 +14,5 @@ data class ChildDataEntity(
     val voiceAnalysisOption: VoiceAnalysisOption = VoiceAnalysisOption.MACHINE_LEARNING,
     val noiseLevel: Int = NoiseDetector.DEFAULT_NOISE_LEVEL,
     // Right now we are supporting only one child
-    @PrimaryKey val id: Int = 0
+    @PrimaryKey val id: Int = 0,
 )

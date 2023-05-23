@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 
 fun Fragment.showSnackbarMessage(
     @StringRes resId: Int,
-    action: (Snackbar.() -> Unit)? = null
+    action: (Snackbar.() -> Unit)? = null,
 ): Snackbar? {
     return view?.run {
         Snackbar.make(this, resId, Snackbar.LENGTH_LONG).apply {
@@ -34,12 +34,12 @@ fun Fragment.bindService(intentClass: Class<*>, conn: ServiceConnection, flags: 
     requireContext().bindService(
         Intent(requireContext(), intentClass),
         conn,
-        flags
+        flags,
     )
 }
 
 fun Fragment.getColor(resource: Int, theme: Resources.Theme? = null) = ResourcesCompat.getColor(
     resources,
     resource,
-    theme
+    theme,
 )

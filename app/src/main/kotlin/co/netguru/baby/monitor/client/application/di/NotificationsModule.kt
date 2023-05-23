@@ -16,17 +16,17 @@ object NotificationsModule {
     @Provides
     fun provideNotifyBabyEventUseCase(
         notificationSender: FirebaseNotificationSender,
-        context: Context
+        context: Context,
     ) =
         NotifyBabyEventUseCase(
             notificationSender,
             mapOf(
                 NotifyBabyEventUseCase.CRY_TITLE_KEY
-                        to context.resources.getString(R.string.notification_baby_is_crying_title),
+                    to context.resources.getString(R.string.notification_baby_is_crying_title),
                 NotifyBabyEventUseCase.NOISE_TITLE_KEY
-                        to context.resources.getString(R.string.notification_noise_detected_title),
+                    to context.resources.getString(R.string.notification_noise_detected_title),
                 NotifyBabyEventUseCase.NOTIFICATION_TEXT_KEY
-                        to context.resources.getString(R.string.notification_baby_is_crying_content)
-            )
+                    to context.resources.getString(R.string.notification_baby_is_crying_content),
+            ),
         )
 }

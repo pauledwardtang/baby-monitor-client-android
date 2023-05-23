@@ -1,11 +1,11 @@
 package co.netguru.baby.monitor.client.feature.communication.internet
 
 import io.reactivex.Single
-import timber.log.Timber
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import javax.inject.Inject
+import timber.log.Timber
 
 class CheckInternetConnectionUseCase @Inject constructor() {
 
@@ -26,6 +26,7 @@ class CheckInternetConnectionUseCase @Inject constructor() {
             isConnected
         }
     }
+
     companion object {
         private const val TIMEOUT_MS = 1500
         private const val PORT = 53

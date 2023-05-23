@@ -19,7 +19,7 @@ import javax.inject.Singleton
 class DataRepository @Inject constructor(
     private val database: AppDatabase,
     private val appStateHandler: AppStateHandler,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
 ) {
 
     fun getAllLogData() = database.logDataDao().getAllData()

@@ -35,17 +35,17 @@ class PulsatingView(context: Context, attrs: AttributeSet?) : View(context, attr
     init {
         context.obtainStyledAttributes(
             attrs,
-            R.styleable.PulsatingView
+            R.styleable.PulsatingView,
         ).run {
             try {
                 circleSize = getDimensionPixelSize(R.styleable.PulsatingView_circleSize, 0)
                 activeColor = getColor(
                     R.styleable.PulsatingView_activeColor,
-                    ContextCompat.getColor(context, R.color.active_pulsating)
+                    ContextCompat.getColor(context, R.color.active_pulsating),
                 )
                 inactiveColor = getColor(
                     R.styleable.PulsatingView_inactiveColor,
-                    ContextCompat.getColor(context, R.color.inactive_pulsating)
+                    ContextCompat.getColor(context, R.color.inactive_pulsating),
                 )
 
                 firstPulsePaint.color = activeColor
@@ -118,7 +118,7 @@ class PulsatingView(context: Context, attrs: AttributeSet?) : View(context, attr
             width / 2f,
             height / 2f,
             height / 2f * secondPulseSize,
-            secondPulsePaint
+            secondPulsePaint,
         )
     }
 

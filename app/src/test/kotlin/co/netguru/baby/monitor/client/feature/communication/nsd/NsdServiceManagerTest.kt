@@ -6,11 +6,17 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import co.netguru.baby.monitor.RxSchedulersOverrideRule
 import co.netguru.baby.monitor.client.feature.communication.nsd.NsdServiceManager.Companion.SERVICE_NAME
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import java.net.InetAddress
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.net.InetAddress
 
 class NsdServiceManagerTest {
 
@@ -59,11 +65,13 @@ class NsdServiceManagerTest {
         verify(nsdManager).resolveService(eq(nsdServiceInfo), argumentCaptorResolve.capture())
         argumentCaptorResolve.firstValue.onServiceResolved(nsdServiceInfo)
 
-        verify(nsdStateObserver).onChanged(argThat {
-            this is NsdState.InProgress && serviceInfoList.contains(
-                nsdServiceInfo
-            )
-        })
+        verify(nsdStateObserver).onChanged(
+            argThat {
+                this is NsdState.InProgress && serviceInfoList.contains(
+                    nsdServiceInfo,
+                )
+            },
+        )
     }
 
     @Test
@@ -83,10 +91,12 @@ class NsdServiceManagerTest {
         verify(nsdManager).discoverServices(any(), any(), argumentCaptorDiscovery.capture())
         argumentCaptorDiscovery.firstValue.onStartDiscoveryFailed("", 0)
 
-        verify(nsdStateObserver).onChanged(argThat {
-            this is NsdState.Error &&
+        verify(nsdStateObserver).onChanged(
+            argThat {
+                this is NsdState.Error &&
                     throwable is StartDiscoveryFailedException
-        })
+            },
+        )
     }
 
     @Test
@@ -99,9 +109,11 @@ class NsdServiceManagerTest {
         verify(nsdManager).resolveService(eq(nsdServiceInfo), argumentCaptorResolve.capture())
         argumentCaptorResolve.firstValue.onResolveFailed(nsdServiceInfo, 0)
 
-        verify(nsdStateObserver).onChanged(argThat {
-            this is NsdState.Error &&
+        verify(nsdStateObserver).onChanged(
+            argThat {
+                this is NsdState.Error &&
                     throwable is ResolveFailedException
-        })
+            },
+        )
     }
 }

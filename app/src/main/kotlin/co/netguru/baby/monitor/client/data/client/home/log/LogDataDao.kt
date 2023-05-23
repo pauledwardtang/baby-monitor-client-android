@@ -3,7 +3,7 @@ package co.netguru.baby.monitor.client.data.client.home.log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.reactivex.*
+import io.reactivex.Flowable
 
 @Dao
 interface LogDataDao {

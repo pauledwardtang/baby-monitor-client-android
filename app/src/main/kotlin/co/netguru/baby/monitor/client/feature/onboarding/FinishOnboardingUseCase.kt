@@ -5,7 +5,7 @@ import co.netguru.baby.monitor.client.data.splash.AppState
 import javax.inject.Inject
 
 class FinishOnboardingUseCase @Inject constructor(
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
 ) {
 
     fun finishOnboarding() {

@@ -21,8 +21,8 @@ import javax.inject.Singleton
         SharedPreferencesModule::class,
         NotificationsModule::class,
         FirebaseModule::class,
-        NetworkModule::class
-    ]
+        NetworkModule::class,
+    ],
 )
 internal interface ApplicationComponent : AndroidInjector<App> {
     @Component.Builder

@@ -6,7 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 
 class AnalyticsManager(
-    private val firebaseAnalytics: FirebaseAnalytics
+    private val firebaseAnalytics: FirebaseAnalytics,
 ) {
     fun setCurrentScreen(activity: Activity, screen: Screen) {
         firebaseAnalytics.setCurrentScreen(activity, screen.screenName, null)
@@ -18,7 +18,7 @@ class AnalyticsManager(
             is Event.Simple -> firebaseAnalytics.logEvent(event.eventType.eventName, null)
             is Event.ParamEvent -> firebaseAnalytics.logEvent(
                 event.eventType.eventName,
-                bundleOf(event.param.first.paramName to event.param.second)
+                bundleOf(event.param.first.paramName to event.param.second),
             )
         }
         Timber.d("$EVENT ${event.eventType.eventName}")

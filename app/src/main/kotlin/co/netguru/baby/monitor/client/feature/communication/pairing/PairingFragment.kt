@@ -9,9 +9,9 @@ import androidx.navigation.fragment.findNavController
 import co.netguru.baby.monitor.client.R
 import co.netguru.baby.monitor.client.common.base.BaseFragment
 import co.netguru.baby.monitor.client.feature.analytics.Screen
-import kotlinx.android.synthetic.main.fragment_pairing.*
 import java.net.URI
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_pairing.*
 
 class PairingFragment : BaseFragment() {
     override val layoutResource = R.layout.fragment_pairing
@@ -43,21 +43,26 @@ class PairingFragment : BaseFragment() {
     }
 
     private fun setupOnBackPressedHandling() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.cancelPairing()
-                findNavController().popBackStack()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object :
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.cancelPairing()
+                    findNavController().popBackStack()
+                }
+            },
+        )
         backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }
 
     private fun setupObservers() {
-        viewModel.pairingCompletedState.observe(viewLifecycleOwner,
-            Observer { onConnectionCompleted(it) })
+        viewModel.pairingCompletedState.observe(
+            viewLifecycleOwner,
+            Observer { onConnectionCompleted(it) },
+        )
     }
 
     private fun onConnectionCompleted(connectionCompleted: Boolean) {
@@ -66,7 +71,7 @@ class PairingFragment : BaseFragment() {
                 R.id.pairingToAllDone
             } else {
                 R.id.pairingToConnectionFailed
-            }
+            },
         )
     }
 }

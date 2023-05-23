@@ -26,18 +26,18 @@ class ActivityLogAdapter : RecyclerView.Adapter<LogsViewHolder>(), StickyHeaderI
         activityList = mutableListOf()
 
         list.asSequence()
-                .sortedByDescending { it.timeStamp }
-                .forEach { data ->
-                    with(data.timeStamp) {
-                        if (!map.containsKey(toLocalDate().toString())) {
-                            activityList.add(LogHeader(this))
-                            map[toLocalDate().toString()] = activityList.lastIndex
-                        }
-                    }
-                    if (!activityList.contains(data)) {
-                        activityList.add(data)
+            .sortedByDescending { it.timeStamp }
+            .forEach { data ->
+                with(data.timeStamp) {
+                    if (!map.containsKey(toLocalDate().toString())) {
+                        activityList.add(LogHeader(this))
+                        map[toLocalDate().toString()] = activityList.lastIndex
                     }
                 }
+                if (!activityList.contains(data)) {
+                    activityList.add(data)
+                }
+            }
         activityList.add(EndText(activityList.lastOrNull()?.timeStamp ?: LocalDateTime.now()))
         notifyDataSetChanged()
     }
@@ -49,11 +49,11 @@ class ActivityLogAdapter : RecyclerView.Adapter<LogsViewHolder>(), StickyHeaderI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            when (viewType) {
-                R.layout.item_log_activity_header -> HeaderViewHolder(parent, viewType)
-                R.layout.item_log_activity_record -> DataLogsViewHolder(parent, viewType)
-                else -> EndTextHolder(parent, viewType)
-            }
+        when (viewType) {
+            R.layout.item_log_activity_header -> HeaderViewHolder(parent, viewType)
+            R.layout.item_log_activity_record -> DataLogsViewHolder(parent, viewType)
+            else -> EndTextHolder(parent, viewType)
+        }
 
     override fun getItemCount() = activityList.size
 
@@ -66,11 +66,11 @@ class ActivityLogAdapter : RecyclerView.Adapter<LogsViewHolder>(), StickyHeaderI
     override fun getHeaderLayout(headerPosition: Int) = R.layout.item_log_activity_header
 
     override fun getHeaderPositionForItem(itemPosition: Int) =
-            if (activityList[itemPosition] is LogHeader) {
-                itemPosition
-            } else {
-                map[activityList[itemPosition].timeStamp.toLocalDate().toString()] ?: 0
-            }
+        if (activityList[itemPosition] is LogHeader) {
+            itemPosition
+        } else {
+            map[activityList[itemPosition].timeStamp.toLocalDate().toString()] ?: 0
+        }
 
     override fun bindHeaderData(header: View, headerPosition: Int) {
         val textView = header.findViewById(R.id.itemActivityLogHeaderTv) as TextView
@@ -81,8 +81,16 @@ class ActivityLogAdapter : RecyclerView.Adapter<LogsViewHolder>(), StickyHeaderI
             val baseText = data.timeStamp.format(DateProvider.headerFormatter)
 
             textView.text = when {
-                data.timeStamp.isAfter(today) -> header.context.getString(R.string.date_today, baseText)
-                data.timeStamp.isAfter(yesterday) -> header.context.getString(R.string.date_yesterday, baseText)
+                data.timeStamp.isAfter(today) -> header.context.getString(
+                    R.string.date_today,
+                    baseText,
+                )
+
+                data.timeStamp.isAfter(yesterday) -> header.context.getString(
+                    R.string.date_yesterday,
+                    baseText,
+                )
+
                 else -> baseText
             }
         }
