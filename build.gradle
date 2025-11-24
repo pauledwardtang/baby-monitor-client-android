@@ -54,6 +54,7 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://clojars.org/repo/" }
+        maven { url = uri("https://raw.githubusercontent.com/alexgreench/google-webrtc/master") }
     }
 }
 

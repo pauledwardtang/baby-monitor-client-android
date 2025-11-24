@@ -169,9 +169,6 @@ dependencies {
     implementation ktx.liveData
     implementation ktx.vm
 
-    //Anko Commons
-    implementation libs.ankoCommons
-
     //Live Data
     kapt proc.lifecycleExtensions
 

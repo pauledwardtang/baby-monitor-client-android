@@ -16,7 +16,6 @@ import co.netguru.baby.monitor.client.common.extensions.getColorCompat
 import co.netguru.baby.monitor.client.feature.babynotification.BabyEventActionIntentService
 import co.netguru.baby.monitor.client.feature.client.home.ClientHomeActivity
 import co.netguru.baby.monitor.client.feature.server.ServerActivity
-import org.jetbrains.anko.singleTop
 
 class NotificationHandler(private val context: Context) {
 
@@ -38,7 +37,7 @@ class NotificationHandler(private val context: Context) {
                     PendingIntent.getActivity(
                         service,
                         0,
-                        Intent(service, ServerActivity::class.java).singleTop(),
+                        Intent(service, ServerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
                         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                     ),
                 )
@@ -55,7 +54,7 @@ class NotificationHandler(private val context: Context) {
         iconResId: Int? = null,
         actions: List<NotificationCompat.Action>? = null,
     ): Notification {
-        val resultIntent = Intent(context, ClientHomeActivity::class.java).singleTop()
+        val resultIntent = Intent(context, ClientHomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val resultPendingIntent =
             PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notificationBuilder =
